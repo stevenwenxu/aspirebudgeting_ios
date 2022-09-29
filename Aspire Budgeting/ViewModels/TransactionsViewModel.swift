@@ -5,13 +5,22 @@
 
 import Combine
 import Foundation
+import OrderedCollections
 
 final class TransactionsViewModel: ObservableObject {
   let publisher: AnyPublisher<Transactions, Error>
   let dateFormatter = DateFormatter()
   var cancellables = Set<AnyCancellable>()
 
-  @Published private(set) var transactions: Transactions?
+  private(set) var transactionsByDate: OrderedDictionary<Date, [Transaction]>?
+
+  @Published private(set) var transactions: Transactions? {
+    didSet {
+      guard let transactions = transactions?.transactions else { return }
+      transactionsByDate = OrderedDictionary(grouping: transactions, by: { $0.date })
+    }
+  }
+
   @Published private(set) var error: Error?
 
   var isLoading: Bool {
@@ -22,20 +31,23 @@ final class TransactionsViewModel: ObservableObject {
     self.publisher = publisher
   }
 
-  func filtered(by filter: String) -> [Transaction] {
-    guard let transactions = transactions else {
-      return .init()
+  func filtered(by filter: String) -> OrderedDictionary<Date, [Transaction]> {
+    guard let transactionsByDate = transactionsByDate else {
+      return [:]
     }
 
     if filter.isEmpty {
-      return transactions.transactions
+      return transactionsByDate
     }
 
-    return transactions
-      .transactions
-      .filter {
-        $0.contains(filter)
+    var result = OrderedDictionary<Date, [Transaction]>()
+    transactionsByDate.forEach { date, transactions in
+      let matchingTransactions = transactions.filter { $0.contains(filter) }
+      if !matchingTransactions.isEmpty {
+        result[date, default: []].append(contentsOf: matchingTransactions)
       }
+    }
+    return result
   }
 
   func formattedDate(for date: Date) -> String {

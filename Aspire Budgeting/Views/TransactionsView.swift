@@ -20,42 +20,46 @@ struct TransactionsView: View {
       } else {
         searchBar
         List {
-          ForEach(viewModel.filtered(by: searchText), id: \.self) { transaction in
-            HStack {
-              arrowFor(type: transaction.transactionType)
-              VStack(alignment: .leading) {
-                Text(transaction.payee)
-                  .font(.nunitoBold(size: 16))
-                Text(viewModel.formattedDate(for: transaction.date))
-                  .font(.karlaRegular(size: 14))
-                Text(transaction.account)
-                  .font(.karlaRegular(size: 14))
-                Text(transaction.category)
-                  .font(.karlaRegular(size: 14))
-                if transaction.approvalType == .pending {
-                  Text("Pending")
-                    .font(.karlaRegular(size: 14))
-                }
-                if transaction.approvalType == .approved {
-                  Text("Approved")
-                    .font(.karlaRegular(size: 14))
+          let transactionsByDate = viewModel.filtered(by: searchText)
+
+          ForEach(Array(transactionsByDate.keys), id: \.self) { date in
+            Section {
+              ForEach(transactionsByDate[date]!, id: \.self) { transaction in
+                HStack {
+                  arrowFor(type: transaction.transactionType)
+                  VStack(alignment: .leading) {
+                    Text(transaction.payee)
+                      .font(.nunitoBold(size: 16))
+                    Text(transaction.account)
+                      .font(.karlaRegular(size: 14))
+                    Text(transaction.category)
+                      .font(.karlaRegular(size: 14))
+                    if transaction.approvalType == .pending {
+                      Text("Pending")
+                        .font(.karlaRegular(size: 14))
+                    }
+                    if transaction.approvalType == .approved {
+                      Text("Approved")
+                        .font(.karlaRegular(size: 14))
+                    }
+                  }
+                  Spacer()
+                  VStack(alignment: .trailing) {
+                    Text(transaction.amount)
+                      .font(.nunitoBold(size: 16))
+                      .foregroundColor(
+                        transaction.transactionType == .inflow ? .expenseGreen : .expenseRed
+                      )
+                    if !transaction.memo.isEmpty {
+                      Text(transaction.memo)
+                        .font(.karlaRegular(size: 14))
+                    }
+                  }
                 }
               }
-              Spacer()
-              VStack(alignment: .trailing) {
-                Text(transaction.amount)
-                  .font(.nunitoBold(size: 16))
-                  .foregroundColor(
-                    transaction.transactionType == .inflow ? .expenseGreen : .expenseRed
-                  )
-                if !transaction.memo.isEmpty {
-                  Text(transaction.memo)
-                    .font(.karlaRegular(size: 14))
-                }
-              }
-            }
-          }.listRowBackground(Color.primaryBackgroundColor)
-        }
+            } header: { Text(viewModel.formattedDate(for: date)).font(.karlaRegular(size: 14)) }
+          }
+        }.listRowBackground(Color.primaryBackgroundColor).listStyle(.plain)
       }
     }
     .alert(isPresented: $showingAlert, content: {

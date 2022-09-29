@@ -66,10 +66,9 @@ struct Transactions: ConstructableFromRows {
 
   init(rows: [[String]]) {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateStyle = .short
-    dateFormatter.timeStyle = .none
+    dateFormatter.dateFormat = "MM/dd/yyyy"
 
-    transactions = rows.filter { $0.count == 8 }.map { row in
+    transactions = rows.filter { $0.count == 8 }.compactMap { row in
       let date = dateFormatter.date(from: row[0]) ?? Date()
       let account = row[1]
       let payee = row[2]
@@ -78,6 +77,8 @@ struct Transactions: ConstructableFromRows {
       let (amount, transactionType) =
         row[5].isEmpty ? (row[6], TransactionType.inflow) : (row[5], TransactionType.outflow)
       let approvalType = ApprovalType.approvalType(from: row[7])
+
+      if approvalType == .reconcile { return nil }
 
       return Transaction(amount: amount,
                          memo: memo,
