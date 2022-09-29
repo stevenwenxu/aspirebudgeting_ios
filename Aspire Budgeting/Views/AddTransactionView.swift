@@ -56,35 +56,19 @@ struct AddTransactionView: View {
   var body: some View {
     NavigationView {
       Form {
+        Picker(selection: $transactionType, label: Text("Transaction Type")) {
+          Text("Inflow").tag(TransactionType.inflow)
+          Text("Outflow").tag(TransactionType.outflow)
+        }.pickerStyle(SegmentedPickerStyle())
+
         AspireTextField(
           text: $amountString,
           placeHolder: "Amount",
           keyboardType: .decimalPad,
           leftImage: Image.bankNote
         )
-
-        AspireTextField(
-          text: $memoString,
-          placeHolder: "Memo",
-          keyboardType: .default,
-          leftImage: Image.scribble
-        )
-
-        DatePicker(selection: $selectedDate,
-                   in: ...Date(),
-                   displayedComponents: .date) {
-          HStack {
-            Image(systemName: "calendar")
-              .resizable()
-              .scaledToFit()
-              .frame(width: 30, height: 30, alignment: .center)
-
-            Text("Date: ")
-              .font(.nunitoSemiBold(size: 20))
-          }
-        }
-
-        if self.viewModel.dataProvider != nil {
+        
+        if let dataProvider = self.viewModel.dataProvider {
           Picker(
             selection: $selectedCategory,
             label: HStack {
@@ -96,8 +80,8 @@ struct AddTransactionView: View {
                 .font(.nunitoSemiBold(size: 20))
             }
           ) {
-            ForEach(0..<self.viewModel.dataProvider!.transactionCategories.count) {
-              Text(self.viewModel.dataProvider!.transactionCategories[$0])
+            ForEach(dataProvider.transactionCategories, id: \.self) {
+              Text($0)
             }.navigationBarTitle(Text("Select Category"))
           }
 
@@ -112,33 +96,51 @@ struct AddTransactionView: View {
                 .font(.nunitoSemiBold(size: 20))
             }
             ) {
-            ForEach(0..<self.viewModel.dataProvider!.transactionAccounts.count) {
-              Text(self.viewModel.dataProvider!.transactionAccounts[$0])
-            }
+              ForEach(dataProvider.transactionAccounts, id: \.self) {
+                Text($0)
+              }.navigationBarTitle(Text("Select Account"))
           }
         }
 
-        Picker(selection: $transactionType, label: Text("Transaction Type")) {
-          Text("Inflow").tag(TransactionType.inflow)
-          Text("Outflow").tag(TransactionType.outflow)
-        }.pickerStyle(SegmentedPickerStyle())
+        DatePicker(selection: $selectedDate,
+                   displayedComponents: .date) {
+          HStack {
+            Image(systemName: "calendar")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 30, height: 30, alignment: .center)
+
+            Text("Date: ")
+              .font(.nunitoSemiBold(size: 20))
+          }
+        }
 
         Picker(selection: $approvalType, label: Text("Approval Type")) {
           Text("Approved").tag(ApprovalType.approved)
           Text("Pending").tag(ApprovalType.pending)
         }.pickerStyle(SegmentedPickerStyle())
 
+        AspireTextField(
+          text: $memoString,
+          placeHolder: "Memo",
+          keyboardType: .default,
+          leftImage: Image.scribble
+        )
+
         if showAddButton {
           Button(action: {
-            let transaction = Transaction(amount: amountString,
-                                          memo: memoString,
-                                          date: selectedDate,
-                                          account: self.viewModel.dataProvider!
-                                            .transactionAccounts[selectedAccount],
-                                          category: self.viewModel.dataProvider!
-                                            .transactionCategories[selectedCategory],
-                                          transactionType: transactionType,
-                                          approvalType: approvalType)
+            let transaction = Transaction(
+              amount: amountString,
+              memo: memoString,
+              date: selectedDate,
+              account: self.viewModel.dataProvider!
+                .transactionAccounts[selectedAccount],
+              category: self.viewModel.dataProvider!
+                .transactionCategories[selectedCategory],
+              transactionType: transactionType,
+              approvalType: approvalType,
+              payee: "TODO"
+            )
             self.viewModel.dataProvider?.submit(transaction, self.callback)
           }, label: {
             Text("Add Transaction")

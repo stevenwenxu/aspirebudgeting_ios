@@ -48,14 +48,16 @@ struct Transaction: Hashable {
   let category: String
   let transactionType: TransactionType
   let approvalType: ApprovalType
+  let payee: String
 }
 
 extension Transaction {
   func contains(_ text: String) -> Bool {
     self.amount.caseInsensitiveCompare(text) ||
-      self.memo.contains(text) ||
-      self.account.contains(text) ||
-      self.category.contains(text)
+      self.memo.lowercased().contains(text.lowercased()) ||
+      self.account.lowercased().contains(text.lowercased()) ||
+      self.category.lowercased().contains(text.lowercased()) ||
+      self.payee.lowercased().contains(text.lowercased())
   }
 }
 
@@ -67,14 +69,15 @@ struct Transactions: ConstructableFromRows {
     dateFormatter.dateStyle = .short
     dateFormatter.timeStyle = .none
 
-    transactions = rows.filter { $0.count == 7 }.map { row in
+    transactions = rows.filter { $0.count == 8 }.map { row in
       let date = dateFormatter.date(from: row[0]) ?? Date()
-      let (amount, transactionType) =
-        row[1].isEmpty ? (row[2], TransactionType.inflow) : (row[1], TransactionType.outflow)
+      let account = row[1]
+      let payee = row[2]
       let category = row[3]
-      let account = row[4]
-      let memo = row[5]
-      let approvalType = ApprovalType.approvalType(from: row[6])
+      let memo = row[4]
+      let (amount, transactionType) =
+        row[5].isEmpty ? (row[6], TransactionType.inflow) : (row[5], TransactionType.outflow)
+      let approvalType = ApprovalType.approvalType(from: row[7])
 
       return Transaction(amount: amount,
                          memo: memo,
@@ -82,7 +85,9 @@ struct Transactions: ConstructableFromRows {
                          account: account,
                          category: category,
                          transactionType: transactionType,
-                         approvalType: approvalType)
+                         approvalType: approvalType,
+                         payee: payee
+      )
     }
   }
 }

@@ -20,19 +20,17 @@ struct TransactionsView: View {
       } else {
         searchBar
         List {
-          ForEach(viewModel.filtered(by: searchText).reversed(), id: \.self) { transaction in
+          ForEach(viewModel.filtered(by: searchText), id: \.self) { transaction in
             HStack {
               arrowFor(type: transaction.transactionType)
               VStack(alignment: .leading) {
-                Text(transaction.category)
+                Text(transaction.payee)
                   .font(.nunitoBold(size: 16))
                 Text(viewModel.formattedDate(for: transaction.date))
                   .font(.karlaRegular(size: 14))
-                if !transaction.memo.isEmpty {
-                  Text(transaction.memo)
-                    .font(.karlaRegular(size: 14))
-                }
                 Text(transaction.account)
+                  .font(.karlaRegular(size: 14))
+                Text(transaction.category)
                   .font(.karlaRegular(size: 14))
                 if transaction.approvalType == .pending {
                   Text("Pending")
@@ -44,11 +42,17 @@ struct TransactionsView: View {
                 }
               }
               Spacer()
-              Text(transaction.amount)
-                .font(.nunitoBold(size: 16))
-                .foregroundColor(
-                  transaction.transactionType == .inflow ? .expenseGreen : .expenseRed
-                )
+              VStack(alignment: .trailing) {
+                Text(transaction.amount)
+                  .font(.nunitoBold(size: 16))
+                  .foregroundColor(
+                    transaction.transactionType == .inflow ? .expenseGreen : .expenseRed
+                  )
+                if !transaction.memo.isEmpty {
+                  Text(transaction.memo)
+                    .font(.karlaRegular(size: 14))
+                }
+              }
             }
           }.listRowBackground(Color.primaryBackgroundColor)
         }

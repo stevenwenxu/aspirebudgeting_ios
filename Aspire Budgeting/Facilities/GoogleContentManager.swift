@@ -254,7 +254,7 @@ extension GoogleContentManager {
       range = "Transactions!B:H"
 
     case is Transactions.Type:
-      range = "Transactions!B9:H"
+      range = "My Transactions!B9:I"
 
     case is TrxCategories.Type:
       range = self.getTrxCategoriesRange(for: version)
