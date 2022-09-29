@@ -44,6 +44,7 @@ final class GoogleContentManager {
   private let kDashboard = "Dashboard"
   private let kAccountBalances = "Account Balances"
   private let kVersionLocation = "BackendData!2:2"
+  private let kVersionNamedRange = "v_Version"
   private let kTrxCategories = "trx_CategoriesList"
   private let kTrxAccounts = "trx_AccountsList"
 
@@ -70,7 +71,7 @@ extension GoogleContentManager: ContentReader {
         }, receiveValue: { _ in // TODO: To be implemented for >3.3
         })
     } else {
-      readSink = getVersion(for: file, user: user)
+      readSink = getVersion(for: file, user: user, using: dataMap)
         .compactMap { self.getRanges(of: T.self, for: $0) }
         .flatMap { self.fileReader.read(file: file, user: user, locations: $0) }
         .sink(receiveCompletion: { status in
@@ -120,7 +121,7 @@ extension GoogleContentManager: ContentReader {
   ) -> AnyPublisher<T, Error> {
     getRange(of: T.self, from: dataMap)
       .catch { _ in
-        self.getVersion(for: file, user: user)
+        self.getVersion(for: file, user: user, using: dataMap)
           .flatMap { (supportedVersion: SupportedLegacyVersion) -> AnyPublisher<String, Error> in
             self.getRange(of: T.self, for: supportedVersion)
           }
@@ -150,7 +151,7 @@ extension GoogleContentManager: ContentWriter {
                 using dataMap: [String: String]) -> AnyPublisher<Void, Error> {
     getRange(of: T.self, from: dataMap)
       .catch { _ in
-        self.getVersion(for: file, user: user)
+        self.getVersion(for: file, user: user, using: dataMap)
           .flatMap { (supportedVersion: SupportedLegacyVersion) -> AnyPublisher<String, Error> in
             self.getRange(of: T.self, for: supportedVersion)
           }
@@ -174,15 +175,18 @@ extension GoogleContentManager: ContentWriter {
 // MARK: - Internal Helpers
 extension GoogleContentManager {
   private func getVersion(for file: File,
-                          user: User) -> AnyPublisher<SupportedLegacyVersion, Error> {
+                          user: User,
+                          using dataMap: [String: String]) -> AnyPublisher<SupportedLegacyVersion, Error> {
     if let legacyVersion = supportedLegacyVersion {
       return Just(legacyVersion)
         .setFailureType(to: Error.self)
         .eraseToAnyPublisher()
     }
 
+    let versionLocation = dataMap[kVersionNamedRange] ?? kVersionLocation
+
     return self.fileReader
-      .read(file: file, user: user, locations: [kVersionLocation])
+      .read(file: file, user: user, locations: [versionLocation])
       .tryMap { valueRanges -> String in
         guard let version = (valueRanges as? [GTLRSheets_ValueRange])?
                 .first?
@@ -224,7 +228,7 @@ extension GoogleContentManager {
       guard let trxCategories = dataMap[kTrxCategories],
             let trxAccounts = dataMap[kTrxAccounts] else {
         Logger.error("No named range found for: ",
-                     context: "\(kTrxCategories) or \(kTrxCategories)")
+                     context: "\(kTrxCategories) or \(kTrxAccounts)")
         return nil
       }
       return [trxCategories, trxAccounts]
