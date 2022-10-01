@@ -70,7 +70,7 @@ extension TabBarView {
 
         Spacer()
 
-        ForEach(2..<self.tabBarItems.count) { idx in
+        ForEach(2..<self.tabBarItems.count, id: \.self) { idx in
           TabBarItemView(tabBarItem: self.tabBarItems[idx],
                          selectedIndex: self.selectedTab,
                          tabBarIndex: idx,

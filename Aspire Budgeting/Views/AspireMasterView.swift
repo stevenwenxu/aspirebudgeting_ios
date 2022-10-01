@@ -17,37 +17,33 @@ struct AspireMasterView: View {
   @State private var selectedTab = 0
   @State private var navTitle: String = ""
   @State private var addingTransaction = false
+  // TODO: only show this on transactions view
+  @State private var showCategoryTransfer = false
 
   var body: some View {
-    GeometryReader { _ in
+    NavigationView {
       VStack {
-        AspireNavigationBar(title: $navTitle)
-          .edgesIgnoringSafeArea(.all)
-          .frame(height: 50)
-        Group {
-          if selectedTab == 0 {
-            DashboardView(viewModel: appCoordinator.dashboardVM)
-              .onAppear {
-                self.navTitle = "Dashboard"
-              }
-          } else if selectedTab == 1 {
-            AccountBalancesView(viewModel: appCoordinator.accountBalancesVM)
-              .onAppear {
-                self.navTitle = "Accounts"
-              }
-          } else if selectedTab == 2 {
-            TransactionsView(viewModel: appCoordinator.transactionsVM)
-              .onAppear {
-                self.navTitle = "Transactions"
-              }
-          } else if selectedTab == 3 {
-            SettingsView(viewModel: appCoordinator.settingsVM)
-              .onAppear {
-                self.navTitle = "Settings"
-              }
-          }
+        if selectedTab == 0 {
+          DashboardView(viewModel: appCoordinator.dashboardVM)
+            .onAppear {
+              self.navTitle = "Dashboard"
+            }
+        } else if selectedTab == 1 {
+          AccountBalancesView(viewModel: appCoordinator.accountBalancesVM)
+            .onAppear {
+              self.navTitle = "Accounts"
+            }
+        } else if selectedTab == 2 {
+          TransactionsView(viewModel: appCoordinator.transactionsVM)
+            .onAppear {
+              self.navTitle = "Transactions"
+            }
+        } else if selectedTab == 3 {
+          SettingsView(viewModel: appCoordinator.settingsVM)
+            .onAppear {
+              self.navTitle = "Settings"
+            }
         }
-        .frame(height: UIScreen.main.bounds.height - 200)
 
         TabBarView(selectedTab: $selectedTab,
                    tabBarItems: tabBarItems,
@@ -61,7 +57,23 @@ struct AspireMasterView: View {
           AddTransactionView(viewModel: self.appCoordinator.addTransactionVM)
         }
       }
+      .navigationTitle(navTitle)
+//      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        Button(action: {
+          showCategoryTransfer = true
+        }, label: {
+          Image(systemName: "repeat")
+        })
+      }
     }
+    .sheet(isPresented: $showCategoryTransfer, onDismiss: {
+      showCategoryTransfer = false
+    }, content: {
+      NavigationView {
+        CategoryTransferView(viewModel: appCoordinator.categoryTransferViewModel)
+      }
+    })
   }
 }
 

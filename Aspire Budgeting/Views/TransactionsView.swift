@@ -13,13 +13,10 @@ struct TransactionsView: View {
 
   var body: some View {
     VStack {
-      if self.viewModel.isLoading {
-        GeometryReader { geo in
-          LoadingView(height: geo.frame(in: .local).size.height)
-        }
-      } else {
-        searchBar
-        List {
+      List {
+        if self.viewModel.isLoading {
+          LoadingView()
+        } else {
           let transactionsByDate = viewModel.filtered(by: searchText)
 
           ForEach(Array(transactionsByDate.keys), id: \.self) { date in
@@ -27,21 +24,13 @@ struct TransactionsView: View {
               ForEach(transactionsByDate[date]!, id: \.self) { transaction in
                 HStack {
                   arrowFor(type: transaction.transactionType)
-                  VStack(alignment: .leading) {
+                  VStack(alignment: .leading, spacing: 2) {
                     Text(transaction.payee)
                       .font(.nunitoBold(size: 16))
                     Text(transaction.account)
                       .font(.karlaRegular(size: 14))
                     Text(transaction.category)
                       .font(.karlaRegular(size: 14))
-                    if transaction.approvalType == .pending {
-                      Text("Pending")
-                        .font(.karlaRegular(size: 14))
-                    }
-                    if transaction.approvalType == .approved {
-                      Text("Approved")
-                        .font(.karlaRegular(size: 14))
-                    }
                   }
                   Spacer()
                   VStack(alignment: .trailing) {
@@ -57,10 +46,13 @@ struct TransactionsView: View {
                   }
                 }
               }
-            } header: { Text(viewModel.formattedDate(for: date)).font(.karlaRegular(size: 14)) }
+            } header: { Text(viewModel.formattedDate(for: date)) }
           }
-        }.listRowBackground(Color.primaryBackgroundColor).listStyle(.plain)
+        }
       }
+      .listRowBackground(Color.primaryBackgroundColor)
+      .listStyle(.plain)
+      .searchable(text: $searchText)
     }
     .alert(isPresented: $showingAlert, content: {
       Alert(title: Text("Error Occured"),

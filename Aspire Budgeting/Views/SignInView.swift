@@ -8,8 +8,6 @@ import SwiftUI
 struct SignInView: View {
   @Environment (\.colorScheme) var colorScheme: ColorScheme
 
-  private let rootVC = UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController
-
   var body: some View {
     VStack {
       Text("Aspire Budgeting")

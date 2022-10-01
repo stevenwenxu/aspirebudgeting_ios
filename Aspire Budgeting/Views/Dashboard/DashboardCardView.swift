@@ -23,7 +23,7 @@ struct DashboardCardView: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading) {
+    VStack {
       topRow
       secondRow
       progressBar
@@ -67,8 +67,7 @@ extension DashboardCardView {
           .padding()
           .padding(.trailing)
       })
-
-    }.padding(.top, 5)
+    }
   }
 
   private var secondRow: some View {

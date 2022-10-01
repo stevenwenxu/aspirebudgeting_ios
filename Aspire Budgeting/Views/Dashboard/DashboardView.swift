@@ -15,22 +15,14 @@ struct DashboardView: View {
   var body: some View {
     VStack {
       if self.viewModel.isLoading {
-        GeometryReader {
-          LoadingView(height: $0.frame(in: .local).size.height)
-        }
+        LoadingView()
       } else {
-        SearchBar(text: $searchText)
-          .ignoreKeyboard()
-
-        if searchText.isEmpty {
-          DashboardCardsListView(cardViewItems: viewModel.cardViewItems)
-            .padding(.vertical, 10)
-        } else {
-          CategoryListView(
-            categories: viewModel
-              .filteredCategories(filter: searchText),
-            tintColor: .materialGreen800)
-        }
+        DashboardCardsListView(cardViewItems: viewModel.cardViewItems)
+          .searchable(text: $searchText) {
+            ForEach(viewModel.filteredCategories(filter: searchText), id: \.self) { category in
+              CategoryView(category: category, tintColor: .materialGrey800)
+            }
+         }
       }
     }
     .alert(isPresented: $showingAlert, content: {
@@ -42,9 +34,9 @@ struct DashboardView: View {
       self.showingAlert = error != nil
     })
     .background(Color.primaryBackgroundColor)
-      .onAppear {
-        self.viewModel.refresh()
-      }
+    .onAppear {
+      self.viewModel.refresh()
+    }
   }
 }
 

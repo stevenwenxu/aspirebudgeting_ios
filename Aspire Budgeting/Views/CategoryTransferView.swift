@@ -39,7 +39,7 @@ struct CategoryTransferView: View {
         leftImage: Image.scribble
       )
 
-      if self.viewModel.categories != nil {
+      if let categories = self.viewModel.categories?.categories {
         Picker(
           selection: $fromCategory,
           label: HStack {
@@ -51,8 +51,8 @@ struct CategoryTransferView: View {
               .font(.nunitoSemiBold(size: 20))
           }
         ) {
-          ForEach(0..<self.viewModel.categories!.categories.count) {
-            Text(self.viewModel.categories!.categories[$0].title)
+          ForEach(categories, id: \.self) {
+            Text($0.title)
           }.navigationBarTitle(Text("From Category"))
         }
         
@@ -67,8 +67,8 @@ struct CategoryTransferView: View {
               .font(.nunitoSemiBold(size: 20))
           }
         ) {
-          ForEach(0..<self.viewModel.categories!.categories.count) {
-            Text(self.viewModel.categories!.categories[$0].title)
+          ForEach(categories, id: \.self) {
+            Text($0.title)
           }.navigationBarTitle(Text("To Category"))
         }
       }

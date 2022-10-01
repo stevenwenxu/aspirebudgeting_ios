@@ -52,7 +52,6 @@
 		069F830624FFFC76009DD3E9 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069F830524FFFC76009DD3E9 /* DashboardViewModel.swift */; };
 		069F830825003EBB009DD3E9 /* GoogleContentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069F830725003EBB009DD3E9 /* GoogleContentManager.swift */; };
 		069F830A25005CA9009DD3E9 /* GoogleContentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069F830925005CA9009DD3E9 /* GoogleContentManagerTests.swift */; };
-		069FDF922383A1C60023E86A /* AspireNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FDF912383A1C60023E86A /* AspireNavigationBar.swift */; };
 		069FDF942384F3840023E86A /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 069FDF932384F3840023E86A /* Rubik-Medium.ttf */; };
 		069FDF962384F43E0023E86A /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 069FDF952384F43E0023E86A /* Rubik-Regular.ttf */; };
 		069FDF982384F4AC0023E86A /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 069FDF972384F4AC0023E86A /* Rubik-Light.ttf */; };
@@ -122,6 +121,7 @@
 		3EDC12D1267564AE006A133D /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDC12D0267564AE006A133D /* ShareSheet.swift */; };
 		8D52A640C3D198885D3A12E6 /* Pods_Aspire_Budgeting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8996E894932F10AFA501C123 /* Pods_Aspire_Budgeting.framework */; };
 		B089078228E5397200BBB002 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B089078128E5397200BBB002 /* OrderedCollections */; };
+		B089078428E7E54500BBB002 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078328E7E54500BBB002 /* CategoryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,7 +180,6 @@
 		069F830524FFFC76009DD3E9 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		069F830725003EBB009DD3E9 /* GoogleContentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleContentManager.swift; sourceTree = "<group>"; };
 		069F830925005CA9009DD3E9 /* GoogleContentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleContentManagerTests.swift; sourceTree = "<group>"; };
-		069FDF912383A1C60023E86A /* AspireNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireNavigationBar.swift; sourceTree = "<group>"; };
 		069FDF932384F3840023E86A /* Rubik-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		069FDF952384F43E0023E86A /* Rubik-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		069FDF972384F4AC0023E86A /* Rubik-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Light.ttf"; sourceTree = "<group>"; };
@@ -257,6 +256,7 @@
 		68CE46AC8D5C124DF9507C36 /* Pods_Aspire_BudgetingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aspire_BudgetingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		847C77A94AB6399935241E26 /* Pods-Aspire BudgetingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire BudgetingTests.release.xcconfig"; path = "Target Support Files/Pods-Aspire BudgetingTests/Pods-Aspire BudgetingTests.release.xcconfig"; sourceTree = "<group>"; };
 		8996E894932F10AFA501C123 /* Pods_Aspire_Budgeting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aspire_Budgeting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B089078328E7E54500BBB002 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -309,7 +309,6 @@
 				060025052373C08700A20C96 /* YoutubePlayerView.swift */,
 				061F10392377801600089D11 /* FaceIDView.swift */,
 				065C7152237FAC3200DB46B2 /* AspireButton.swift */,
-				069FDF912383A1C60023E86A /* AspireNavigationBar.swift */,
 				06BAAFDF239C2FB700F24BF2 /* GradientTextView.swift */,
 				06BAAFE3239C578400F24BF2 /* AspireMasterView.swift */,
 				06BAAFE5239C5EFD00F24BF2 /* AspireSegmentedView.swift */,
@@ -325,6 +324,7 @@
 				06BE37AD251ECB50000CF5C9 /* AspireNumberView.swift */,
 				06BE37B1251ED2D0000CF5C9 /* AspireProgressBar.swift */,
 				06BE37CF251F9BA4000CF5C9 /* CategoryListView.swift */,
+				B089078328E7E54500BBB002 /* CategoryView.swift */,
 				068B129F258EB2A5006B64FE /* BannerView.swift */,
 				065D909425CF2FCB00185786 /* TransactionsView.swift */,
 				06BC51B9264F47C400E4BC8B /* SettingsView.swift */,
@@ -809,6 +809,7 @@
 				061EEF3223A1F7D300A684EB /* AspireTextField.swift in Sources */,
 				06F9A8D7243917EF005E5A13 /* AccountBalances.swift in Sources */,
 				06002500236F9A8000A20C96 /* Dashboard.swift in Sources */,
+				B089078428E7E54500BBB002 /* CategoryView.swift in Sources */,
 				061F103A2377801600089D11 /* FaceIDView.swift in Sources */,
 				06B0A21825A3BEA800E8DFBB /* AddTransactionMetadata.swift in Sources */,
 				06BD7EAF24DDEA81003C5D32 /* Images.swift in Sources */,
@@ -839,7 +840,6 @@
 				06C2BFFE2500A151007B3D73 /* ProminentTabBarItemView.swift in Sources */,
 				3E5B7DFE2690AFEE005B590D /* Publisher+Extensions.swift in Sources */,
 				060025062373C08700A20C96 /* YoutubePlayerView.swift in Sources */,
-				069FDF922383A1C60023E86A /* AspireNavigationBar.swift in Sources */,
 				06BAAFE0239C2FB700F24BF2 /* GradientTextView.swift in Sources */,
 				06A0DAAC235BFE6700AEF9FE /* GoogleSDKCredentials.swift in Sources */,
 				06BE37D0251F9BA4000CF5C9 /* CategoryListView.swift in Sources */,
@@ -962,7 +962,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1017,7 +1017,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

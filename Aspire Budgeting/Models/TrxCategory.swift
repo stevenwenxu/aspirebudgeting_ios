@@ -3,7 +3,7 @@
 // Aspire Budgeting
 //
 
-struct TrxCategory {
+struct TrxCategory: Hashable {
   let title: String
 }
 

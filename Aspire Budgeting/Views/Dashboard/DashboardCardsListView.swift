@@ -9,32 +9,7 @@ struct DashboardCardsListView: View {
 
   let cardViewItems: [DashboardCardView.DashboardCardItem]
 
-  var body: some View {
-    GeometryReader {g in
-      ScrollView {
-        VStack {
-          ForEach(0..<self.cardViewItems.count) { idx in
-            GeometryReader { geo in
-              BaseCardView<DashboardCardView>(
-                minY: g.frame(in: .global).minY,
-                curY: geo.frame(in: .global).minY,
-                baseColor: colorFor(idx: idx)) {
-                DashboardCardView(cardViewItem: self.cardViewItems[idx],
-                                  baseColor: colorFor(idx: idx))
-              }
-              .padding(.horizontal)
-            }.frame(maxWidth: .infinity)
-            .frame(height: 125)
-          }
-        }
-      }.background(Color.primaryBackgroundColor)
-    }
-  }
-}
-
-// MARK: - Internal Types
-extension DashboardCardsListView {
-  static let baseColors: [Color] =
+  let baseColors: [Color] =
     [.materialRed800,
      .materialPink800,
      .materialPurple800,
@@ -48,9 +23,19 @@ extension DashboardCardsListView {
      .materialGrey800,
     ].shuffled()
 
-  private func colorFor(idx: Int) -> Color {
-    DashboardCardsListView
-      .baseColors[idx % DashboardCardsListView.baseColors.count]
+  var body: some View {
+    List {
+      ForEach(0..<self.cardViewItems.count, id: \.self) { idx in
+        BaseCardView(baseColor: baseColors[idx]) {
+          DashboardCardView(cardViewItem: self.cardViewItems[idx],
+                            baseColor: baseColors[idx])
+        }
+        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+        .buttonStyle(.plain)
+      }
+    }
+    .listStyle(.plain)
+    .background(Color.primaryBackgroundColor)
   }
 }
 
