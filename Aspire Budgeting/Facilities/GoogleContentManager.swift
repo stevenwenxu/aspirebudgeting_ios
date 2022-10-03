@@ -63,55 +63,46 @@ extension GoogleContentManager: ContentReader {
                                                       from file: File,
                                                       using dataMap: [String: String],
                                                       completion: @escaping (Result<T>) -> Void) {
-
-    if let locations = getRanges(of: T.self, from: dataMap) {
-      readSink = fileReader
-        .read(file: file, user: user, locations: locations)
-        .sink(receiveCompletion: { _ in // TODO: To be implemented for >3.3
-        }, receiveValue: { _ in // TODO: To be implemented for >3.3
-        })
-    } else {
-      readSink = getVersion(for: file, user: user, using: dataMap)
-        .compactMap { self.getRanges(of: T.self, for: $0) }
-        .flatMap { self.fileReader.read(file: file, user: user, locations: $0) }
-        .sink(receiveCompletion: { status in
-          switch status {
-          case .failure(let error):
-            completion(.failure(error))
-          default:
-            Logger.info("\(T.self) retrieved")
-          }
-        }, receiveValue: { valueRanges in
-          guard let ranges = (valueRanges as? [GTLRSheets_ValueRange]) else {
-            Logger.error("Conversion to [GTLRSheets_ValueRange] failed.")
+    readSink = getVersion(for: file, user: user, using: dataMap)
+      .compactMap { self.getRanges(of: T.self, for: $0) }
+      .flatMap { self.fileReader.read(file: file, user: user, locations: $0) }
+      .sink(receiveCompletion: { status in
+        switch status {
+        case .failure(let error):
+          completion(.failure(error))
+        default:
+          Logger.info("\(T.self) retrieved")
+        }
+      }, receiveValue: { valueRanges in
+        guard let ranges = (valueRanges as? [GTLRSheets_ValueRange]) else {
+          Logger.error("Conversion to [GTLRSheets_ValueRange] failed.")
+          completion(.failure(GoogleDriveManagerError.inconsistentSheet))
+          return
+        }
+        var metadata = [[String]]()
+        ranges.forEach { valueRange in
+          guard let values = (valueRange.values as? [[String]]) else {
+            Logger.error("Value range has no values.",
+                         context: valueRange.range!)
             completion(.failure(GoogleDriveManagerError.inconsistentSheet))
             return
           }
-          var metadata = [[String]]()
-          ranges.forEach { valueRange in
-            guard let values = (valueRange.values as? [[String]]) else {
-              Logger.error("Value range has no values.",
-                           context: valueRange.range!)
+
+          var list = [String]()
+          values.forEach { value in
+            guard let content = value.first else {
+              Logger.error("No content found in GTLRSheets_ValueRange for ",
+                           context: valueRange.range)
               completion(.failure(GoogleDriveManagerError.inconsistentSheet))
               return
             }
-
-            var list = [String]()
-            values.forEach { value in
-              guard let content = value.first else {
-                Logger.error("No content found in GTLRSheets_ValueRange for ",
-                             context: valueRange.range)
-                completion(.failure(GoogleDriveManagerError.inconsistentSheet))
-                return
-              }
-              list.append(content)
-            }
-            metadata.append(list)
+            list.append(content)
           }
-          let data = T(rowsList: metadata)
-          completion(.success(data))
-        })
-    }
+          metadata.append(list)
+        }
+        let data = T(rowsList: metadata)
+        completion(.success(data))
+      })
   }
 
   func getData<T: ConstructableFromRows>(

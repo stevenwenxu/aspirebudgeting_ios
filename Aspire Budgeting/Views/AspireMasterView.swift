@@ -7,73 +7,83 @@ import SwiftUI
 
 struct AspireMasterView: View {
   @EnvironmentObject var appCoordinator: AppCoordinator
-
-  let tabBarItems = [TabBarItem(imageName: "rectangle.grid.1x2", title: "Dashboard"),
-                     TabBarItem(imageName: "creditcard", title: "Accounts"),
-                     TabBarItem(imageName: "arrow.up.arrow.down", title: "Transactions"),
-                     TabBarItem(imageName: "gear", title: "Settings"),
-  ]
-
-  @State private var selectedTab = 0
-  @State private var navTitle: String = ""
-  @State private var addingTransaction = false
-  // TODO: only show this on transactions view
+  @State private var showAddTransactions = false
   @State private var showCategoryTransfer = false
+  @State private var currentSelection = 0
 
   var body: some View {
-    NavigationView {
-      VStack {
-        if selectedTab == 0 {
+    ZStack(alignment: .bottom) {
+      TabView(selection: $currentSelection) {
+        NavigationView {
           DashboardView(viewModel: appCoordinator.dashboardVM)
-            .onAppear {
-              self.navTitle = "Dashboard"
-            }
-        } else if selectedTab == 1 {
-          AccountBalancesView(viewModel: appCoordinator.accountBalancesVM)
-            .onAppear {
-              self.navTitle = "Accounts"
-            }
-        } else if selectedTab == 2 {
-          TransactionsView(viewModel: appCoordinator.transactionsVM)
-            .onAppear {
-              self.navTitle = "Transactions"
-            }
-        } else if selectedTab == 3 {
-          SettingsView(viewModel: appCoordinator.settingsVM)
-            .onAppear {
-              self.navTitle = "Settings"
+            .toolbar {
+              ToolbarItem(placement: .navigation) {
+                Button {
+                  showCategoryTransfer = true
+                } label: {
+                  Image(systemName: "repeat.circle")
+                }
+              }
             }
         }
-
-        TabBarView(selectedTab: $selectedTab,
-                   tabBarItems: tabBarItems,
-                   prominentItemImageName: "plus") {
-          self.addingTransaction.toggle()
+        .tabItem {
+          Label("Dashboard", systemImage: "rectangle.grid.1x2")
         }
-        .frame(height: 95)
-        .padding(.horizontal, 5)
-        .background(Color.primaryBackgroundColor)
-        .sheet(isPresented: $addingTransaction) {
-          AddTransactionView(viewModel: self.appCoordinator.addTransactionVM)
-        }
-      }
-      .navigationTitle(navTitle)
-//      .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-        Button(action: {
-          showCategoryTransfer = true
-        }, label: {
-          Image(systemName: "repeat")
+        .tag(1)
+        .navigationViewStyle(.stack)
+        .sheet(isPresented: $showCategoryTransfer, content: {
+          NavigationView {
+            CategoryTransferView(viewModel: appCoordinator.categoryTransferViewModel)
+              .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                  Button("Cancel", role: .cancel) {
+                    showCategoryTransfer = false
+                  }
+                }
+              }
+          }
         })
+
+        NavigationView { AccountBalancesView(viewModel: appCoordinator.accountBalancesVM) }
+          .tabItem {
+            Label("Accounts", systemImage: "creditcard")
+          }
+          .tag(2)
+          .navigationViewStyle(.stack)
+
+        NavigationView { TransactionsView(viewModel: appCoordinator.transactionsVM) }
+          .tabItem {
+            Label("Transactions", systemImage: "arrow.up.arrow.down")
+          }
+          .tag(3)
+          .navigationViewStyle(.stack)
+
+        SettingsView(viewModel: appCoordinator.settingsVM)
+          .tabItem {
+            Label("Settings", systemImage: "gear")
+          }
+          .tag(4)
       }
+
+      ProminentTabBarItemView(systemImageName: "plus") {
+        showAddTransactions = true
+      }.offset(x: 0, y: -20)
     }
-    .sheet(isPresented: $showCategoryTransfer, onDismiss: {
-      showCategoryTransfer = false
-    }, content: {
-      NavigationView {
-        CategoryTransferView(viewModel: appCoordinator.categoryTransferViewModel)
+    .sheet(
+      isPresented: $showAddTransactions,
+      content: {
+        NavigationView {
+          AddTransactionView(viewModel: self.appCoordinator.addTransactionVM)
+            .toolbar {
+              ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel", role: .cancel) {
+                  showAddTransactions = false
+                }
+              }
+            }
+        }
       }
-    })
+    )
   }
 }
 

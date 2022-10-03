@@ -10,18 +10,10 @@ struct CategoryTransferView: View {
   
   @State private var amountString = ""
   @State private var memoString = ""
-  @State private var fromCategory = -1
-  @State private var toCategory = -1
+  @State private var fromCategory = TrxCategory(title: "")
+  @State private var toCategory = TrxCategory(title: "")
   @State private var showSuccessAlert = false
   @State private var showError = false
-
-  let alertText = "Category Transfer submitted"
-
-  var showAddButton: Bool {
-    !amountString.isEmpty &&
-      fromCategory != -1 &&
-      toCategory != -1
-  }
 
   var body: some View {
     Form {
@@ -32,6 +24,46 @@ struct CategoryTransferView: View {
         leftImage: Image.bankNote
       )
 
+      if let categories = self.viewModel.categories?.categories {
+        Picker(
+          selection: $fromCategory,
+          content: {
+            ForEach(categories, id: \.self) {
+              Text($0.title)
+            }
+          },
+          label: {
+            HStack {
+              Image.envelope
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30, alignment: .center)
+              Text("From")
+                .font(.nunitoSemiBold(size: 20))
+            }
+          }
+        )
+
+        Picker(
+          selection: $toCategory,
+          content: {
+            ForEach(categories, id: \.self) {
+              Text($0.title)
+            }
+          },
+          label: {
+            HStack {
+              Image.envelope
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30, alignment: .center)
+              Text("To")
+                .font(.nunitoSemiBold(size: 20))
+            }
+          }
+        )
+      }
+
       AspireTextField(
         text: $memoString,
         placeHolder: "Memo",
@@ -39,59 +71,28 @@ struct CategoryTransferView: View {
         leftImage: Image.scribble
       )
 
-      if let categories = self.viewModel.categories?.categories {
-        Picker(
-          selection: $fromCategory,
-          label: HStack {
-            Image.envelope
-              .resizable()
-              .scaledToFit()
-              .frame(width: 30, height: 30, alignment: .center)
-            Text("From Category")
-              .font(.nunitoSemiBold(size: 20))
-          }
-        ) {
-          ForEach(categories, id: \.self) {
-            Text($0.title)
-          }.navigationBarTitle(Text("From Category"))
-        }
-        
-        Picker(
-          selection: $toCategory,
-          label: HStack {
-            Image.envelope
-              .resizable()
-              .scaledToFit()
-              .frame(width: 30, height: 30, alignment: .center)
-            Text("To Category")
-              .font(.nunitoSemiBold(size: 20))
-          }
-        ) {
-          ForEach(categories, id: \.self) {
-            Text($0.title)
-          }.navigationBarTitle(Text("To Category"))
-        }
+      Spacer()
+
+      Button(action: {
+        let categorytransfer = CategoryTransfer(
+          amount: amountString,
+          fromCategory: fromCategory,
+          toCategory: toCategory,
+          memo: memoString)
+        self.viewModel.submit(categoryTransfer: categorytransfer)
+      }, label: {
+        Text("Transfer")
+          .font(.nunitoSemiBold(size: 20))
+      })
+      .disabled(amountString.isEmpty || fromCategory.title.isEmpty || toCategory.title.isEmpty)
+      .interactiveDismissDisabled()
+      .alert(isPresented: $showSuccessAlert) {
+        Alert(title: Text("Category Transfer submitted"))
       }
-      
-      if showAddButton {
-        Button(action: {
-          let categorytransfer = CategoryTransfer(
-            amount: amountString,
-            fromCategory: self.viewModel.categories!.categories[fromCategory],
-            toCategory: self.viewModel.categories!.categories[toCategory],
-            memo: memoString)
-          self.viewModel.submit(categoryTransfer: categorytransfer)
-        }, label: {
-          Text("Transfer")
-        })
-        .alert(isPresented: $showSuccessAlert) {
-          Alert(title: Text(alertText))
-        }
-        .alert(isPresented: $showError) {
-          Alert(title: Text("Error Occured"),
-                message: Text("\(viewModel.error?.localizedDescription ?? "")"),
-                dismissButton: .cancel())
-        }
+      .alert(isPresented: $showError) {
+        Alert(title: Text("Error Occured"),
+              message: Text("\(viewModel.error?.localizedDescription ?? "")"),
+              dismissButton: .cancel())
       }
     }
     .onAppear { viewModel.getCategories() }
@@ -102,7 +103,7 @@ struct CategoryTransferView: View {
       self.showError = error != nil
 
     })
-    .navigationBarTitle("Category Transfer")
+    .navigationTitle("Category Transfer")
   }
 }
 

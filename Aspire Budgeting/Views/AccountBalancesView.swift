@@ -9,6 +9,7 @@ import SwiftUI
 struct AccountBalancesView: View {
   @ObservedObject var viewModel: AccountBalancesViewModel
   @State private(set) var showingAlert = false
+  @State private var isDataLoaded = false
 
   func getColorForNumber(number: AspireNumber) -> Color {
     if number.isNegative {
@@ -18,31 +19,37 @@ struct AccountBalancesView: View {
   }
 
   var body: some View {
-    VStack {
-      if self.viewModel.isLoading {
-        LoadingView()
-      } else {
-        ScrollView {
-          LazyVStack(spacing: 12) {
-            ForEach(self.viewModel.accountBalances.accountBalances, id: \.self) { accountBalance in
-              BaseCardView(baseColor: .accountBalanceCardColor) {
-                VStack {
-                  Text(accountBalance.accountName)
-                    .foregroundColor(Color.white)
-                    .font(.nunitoSemiBold(size: 20))
+    List {
+      ForEach(self.viewModel.accountBalances.accountBalances, id: \.self) { accountBalance in
+        BaseCardView(baseColor: .accountBalanceCardColor) {
+          VStack {
+            Text(accountBalance.accountName)
+              .foregroundColor(Color.white)
+              .font(.nunitoSemiBold(size: 20))
 
-                  Text(accountBalance.balance.stringValue)
-                    .foregroundColor(self.getColorForNumber(number: accountBalance.balance))
-                    .font(.nunitoSemiBold(size: 25))
+            Text(accountBalance.balance.stringValue)
+              .foregroundColor(self.getColorForNumber(number: accountBalance.balance))
+              .font(.nunitoSemiBold(size: 25))
 
-                  Text(accountBalance.additionalText)
-                    .foregroundColor(Color.white)
-                    .font(.nunitoRegular(size: 12))
-                }
-              }
-            }
+            Text(accountBalance.additionalText)
+              .foregroundColor(Color.white)
+              .font(.nunitoRegular(size: 12))
           }
         }
+        .buttonStyle(.plain)
+        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+      }
+    }
+    .navigationTitle("Accounts")
+    .listStyle(.plain)
+    .background(Color.primaryBackgroundColor)
+    .refreshable {
+      viewModel.refresh()
+    }
+    .onAppear {
+      if !isDataLoaded {
+        viewModel.refresh()
+        isDataLoaded = true
       }
     }
     .alert(isPresented: $showingAlert, content: {
@@ -53,10 +60,6 @@ struct AccountBalancesView: View {
     .onReceive(viewModel.$error, perform: { error in
       self.showingAlert = error != nil
     })
-    .background(Color.primaryBackgroundColor)
-    .onAppear {
-      self.viewModel.refresh()
-    }
   }
 }
 

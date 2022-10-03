@@ -7,7 +7,7 @@ import SwiftUI
 
 struct ProminentTabBarItemView: View {
 
-  var width: CGFloat = 70
+  var width: CGFloat = 60
 
   private var innerCircleWidth: CGFloat {
     width - 10
@@ -48,6 +48,7 @@ struct ProminentTabBarItemView: View {
           .foregroundColor(.white)
       }.frame(width: width, height: width)
     }
+    .buttonStyle(.plain)
   }
 }
 

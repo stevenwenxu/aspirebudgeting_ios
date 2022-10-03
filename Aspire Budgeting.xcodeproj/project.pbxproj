@@ -80,8 +80,6 @@
 		06BE37AE251ECB50000CF5C9 /* AspireNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BE37AD251ECB50000CF5C9 /* AspireNumberView.swift */; };
 		06BE37B2251ED2D0000CF5C9 /* AspireProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BE37B1251ED2D0000CF5C9 /* AspireProgressBar.swift */; };
 		06BE37D0251F9BA4000CF5C9 /* CategoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06BE37CF251F9BA4000CF5C9 /* CategoryListView.swift */; };
-		06C2BFFC2500A151007B3D73 /* TabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C2BFF92500A151007B3D73 /* TabBarItemView.swift */; };
-		06C2BFFD2500A151007B3D73 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C2BFFA2500A151007B3D73 /* TabBarView.swift */; };
 		06C2BFFE2500A151007B3D73 /* ProminentTabBarItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C2BFFB2500A151007B3D73 /* ProminentTabBarItemView.swift */; };
 		06C2C0012500A19F007B3D73 /* MockProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C2C0002500A19F007B3D73 /* MockProvider.swift */; };
 		06C5C6A823690AEB00862196 /* FileSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C5C6A723690AEB00862196 /* FileSelectorView.swift */; };
@@ -208,8 +206,6 @@
 		06BE37AD251ECB50000CF5C9 /* AspireNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireNumberView.swift; sourceTree = "<group>"; };
 		06BE37B1251ED2D0000CF5C9 /* AspireProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireProgressBar.swift; sourceTree = "<group>"; };
 		06BE37CF251F9BA4000CF5C9 /* CategoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListView.swift; sourceTree = "<group>"; };
-		06C2BFF92500A151007B3D73 /* TabBarItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarItemView.swift; sourceTree = "<group>"; };
-		06C2BFFA2500A151007B3D73 /* TabBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		06C2BFFB2500A151007B3D73 /* ProminentTabBarItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProminentTabBarItemView.swift; sourceTree = "<group>"; };
 		06C2C0002500A19F007B3D73 /* MockProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProvider.swift; sourceTree = "<group>"; };
 		06C5C6A723690AEB00862196 /* FileSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSelectorView.swift; sourceTree = "<group>"; };
@@ -299,9 +295,9 @@
 			isa = PBXGroup;
 			children = (
 				0685BBB5250EC73A00728228 /* CardView */,
-				06C2BFF82500A136007B3D73 /* TabBarView */,
 				060CDA6B238F75F6005CD74B /* Dashboard */,
 				066EF458235CE07C00E94CE4 /* GoogleSignInButton.swift */,
+				06C2BFFB2500A151007B3D73 /* ProminentTabBarItemView.swift */,
 				066EF45A235CF2C900E94CE4 /* BackgroundSplitColorView.swift */,
 				066EF461235D4FBD00E94CE4 /* SignInView.swift */,
 				06C5C6A723690AEB00862196 /* FileSelectorView.swift */,
@@ -411,16 +407,6 @@
 				06F121F32429A66600BC4766 /* instabug.plist */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		06C2BFF82500A136007B3D73 /* TabBarView */ = {
-			isa = PBXGroup;
-			children = (
-				06C2BFFB2500A151007B3D73 /* ProminentTabBarItemView.swift */,
-				06C2BFF92500A151007B3D73 /* TabBarItemView.swift */,
-				06C2BFFA2500A151007B3D73 /* TabBarView.swift */,
-			);
-			path = TabBarView;
 			sourceTree = "<group>";
 		};
 		06C2BFFF2500A18B007B3D73 /* PreviewProvider */ = {
@@ -786,7 +772,6 @@
 				0600250A237511C300A20C96 /* LocalAuthorizationManager.swift in Sources */,
 				065C7153237FAC3200DB46B2 /* AspireButton.swift in Sources */,
 				06BE37AE251ECB50000CF5C9 /* AspireNumberView.swift in Sources */,
-				06C2BFFD2500A151007B3D73 /* TabBarView.swift in Sources */,
 				065D909525CF2FCB00185786 /* TransactionsView.swift in Sources */,
 				066EF462235D4FBD00E94CE4 /* SignInView.swift in Sources */,
 				065F03D2236E2385005AED12 /* DashboardRow.swift in Sources */,
@@ -814,7 +799,6 @@
 				06B0A21825A3BEA800E8DFBB /* AddTransactionMetadata.swift in Sources */,
 				06BD7EAF24DDEA81003C5D32 /* Images.swift in Sources */,
 				3E1E6A0C269A5BED0089EA56 /* MockUser.swift in Sources */,
-				06C2BFFC2500A151007B3D73 /* TabBarItemView.swift in Sources */,
 				062F2BBD24EB13C9004830F8 /* AppCoordinator.swift in Sources */,
 				066EF45B235CF2C900E94CE4 /* BackgroundSplitColorView.swift in Sources */,
 				3EDC12D1267564AE006A133D /* ShareSheet.swift in Sources */,

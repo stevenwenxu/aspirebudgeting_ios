@@ -6,15 +6,6 @@
 import Foundation
 
 enum MockProvider {
-  static var tabBarItems: [TabBarItem] {
-    var tabBarItems = [TabBarItem]()
-    tabBarItems.append(TabBarItem(imageName: "rectangle.grid.1x2", title: "Dashboard"))
-    tabBarItems.append(TabBarItem(imageName: "creditcard", title: "Accounts"))
-    tabBarItems.append(TabBarItem(imageName: "arrow.up.arrow.down", title: "Transactions"))
-    tabBarItems.append(TabBarItem(imageName: "gear", title: "Settings"))
-    return tabBarItems
-  }
-
   static var cardViewItems3: [DashboardCardView.DashboardCardItem] {
     var cardViewItems = [DashboardCardView.DashboardCardItem]()
     cardViewItems.append(.init(title: "Credit Card Payments",
