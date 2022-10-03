@@ -69,6 +69,7 @@ struct AspireMasterView: View {
         showAddTransactions = true
       }.offset(x: 0, y: -20)
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
     .sheet(
       isPresented: $showAddTransactions,
       content: {

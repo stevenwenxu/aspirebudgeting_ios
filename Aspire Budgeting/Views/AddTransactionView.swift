@@ -6,6 +6,11 @@
 import SwiftUI
 
 struct AddTransactionView: View {
+  enum Field {
+    case amount
+    case memo
+  }
+
   let viewModel: AddTransactionViewModel
 
   @State private var amountString = ""
@@ -22,6 +27,8 @@ struct AddTransactionView: View {
   @State private var showAlert = false
   @State private var alertText = ""
 
+  @FocusState private var focusedField: Field?
+
   func callback(result: Result<Void>) {
     switch result {
     case .success:
@@ -37,7 +44,11 @@ struct AddTransactionView: View {
       Picker("Transaction type", selection: $transactionType) {
         Text("Inflow").tag(TransactionType.inflow)
         Text("Outflow").tag(TransactionType.outflow)
-      }.pickerStyle(.segmented)
+      }
+      .pickerStyle(.segmented)
+      .onChange(of: transactionType) { _ in
+        focusedField = nil
+      }
 
       AspireTextField(
         text: $amountString,
@@ -45,6 +56,7 @@ struct AddTransactionView: View {
         keyboardType: .decimalPad,
         leftImage: Image.bankNote
       )
+      .focused($focusedField, equals: .amount)
 
       if let dataProvider = self.viewModel.dataProvider {
         Picker(
@@ -65,6 +77,9 @@ struct AddTransactionView: View {
             }
           }
         )
+        .onChange(of: selectedCategory) { _ in
+          focusedField = nil
+        }
 
         Picker(
           selection: $selectedAccount,
@@ -84,6 +99,9 @@ struct AddTransactionView: View {
             }
           }
         )
+        .onChange(of: selectedAccount) { _ in
+          focusedField = nil
+        }
       }
 
       DatePicker(selection: $selectedDate,
@@ -102,7 +120,11 @@ struct AddTransactionView: View {
       Picker("Approval Type", selection: $approvalType) {
         Text("Approved").tag(ApprovalType.approved)
         Text("Pending").tag(ApprovalType.pending)
-      }.pickerStyle(.segmented)
+      }
+      .pickerStyle(.segmented)
+      .onChange(of: approvalType) { _ in
+        focusedField = nil
+      }
 
       AspireTextField(
         text: $memoString,
@@ -110,6 +132,7 @@ struct AddTransactionView: View {
         keyboardType: .default,
         leftImage: Image.scribble
       )
+      .focused($focusedField, equals: .memo)
 
       Spacer()
 
