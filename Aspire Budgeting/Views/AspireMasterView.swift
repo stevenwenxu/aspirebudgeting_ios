@@ -12,7 +12,7 @@ struct AspireMasterView: View {
   @State private var currentSelection = 0
 
   var body: some View {
-    ZStack(alignment: .bottom) {
+    ZStack(alignment: .bottomTrailing) {
       TabView(selection: $currentSelection) {
         NavigationView {
           DashboardView(viewModel: appCoordinator.dashboardVM)
@@ -67,7 +67,7 @@ struct AspireMasterView: View {
 
       ProminentTabBarItemView(systemImageName: "plus") {
         showAddTransactions = true
-      }.offset(x: 0, y: -20)
+      }.offset(x: -16, y: -56)
     }
     .ignoresSafeArea(.keyboard, edges: .bottom)
     .sheet(
