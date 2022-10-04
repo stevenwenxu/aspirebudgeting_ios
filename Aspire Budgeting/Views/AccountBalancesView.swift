@@ -19,37 +19,44 @@ struct AccountBalancesView: View {
   }
 
   var body: some View {
-    List {
-      ForEach(self.viewModel.accountBalances.accountBalances, id: \.self) { accountBalance in
-        BaseCardView(baseColor: .accountBalanceCardColor) {
-          VStack {
-            Text(accountBalance.accountName)
-              .foregroundColor(Color.white)
-              .font(.nunitoSemiBold(size: 20))
+    VStack {
+      if viewModel.isLoading {
+        GeometryReader { geo in
+          LoadingView(height: geo.frame(in: .global).size.height)
+        }
+      } else {
+        List {
+          ForEach(self.viewModel.accountBalances.accountBalances, id: \.self) { accountBalance in
+            BaseCardView(baseColor: .accountBalanceCardColor) {
+              VStack {
+                Text(accountBalance.accountName)
+                  .foregroundColor(Color.white)
+                  .font(.nunitoSemiBold(size: 20))
 
-            Text(accountBalance.balance.stringValue)
-              .foregroundColor(self.getColorForNumber(number: accountBalance.balance))
-              .font(.nunitoSemiBold(size: 25))
+                Text(accountBalance.balance.stringValue)
+                  .foregroundColor(self.getColorForNumber(number: accountBalance.balance))
+                  .font(.nunitoSemiBold(size: 25))
 
-            Text(accountBalance.additionalText)
-              .foregroundColor(Color.white)
-              .font(.nunitoRegular(size: 12))
+                Text(accountBalance.additionalText)
+                  .foregroundColor(Color.white)
+                  .font(.nunitoRegular(size: 12))
+              }
+            }
+            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+            .buttonStyle(.plain)
           }
         }
-        .buttonStyle(.plain)
-        .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
+        .listStyle(.plain)
+        .refreshable {
+          viewModel.refresh()
+        }
       }
     }
     .navigationTitle("Accounts")
-    .listStyle(.plain)
     .background(Color.primaryBackgroundColor)
-    .refreshable {
-      viewModel.refresh()
-    }
     .onAppear {
-      if !isDataLoaded {
+      if viewModel.accountBalances.isEmpty {
         viewModel.refresh()
-        isDataLoaded = true
       }
     }
     .alert(isPresented: $showingAlert, content: {

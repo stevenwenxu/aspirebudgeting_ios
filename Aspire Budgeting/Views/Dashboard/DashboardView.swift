@@ -10,34 +10,40 @@ struct DashboardView: View {
   @ObservedObject var viewModel: DashboardViewModel
   @State private var searchText = ""
   @State private(set) var showingAlert = false
-  @State private var isDataLoaded = false
 
   var body: some View {
-    DashboardCardsListView(cardViewItems: viewModel.cardViewItems)
-      .background(Color.primaryBackgroundColor)
-      .navigationTitle("Dashboard")
-      .searchable(text: $searchText) {
-        ForEach(viewModel.filteredCategories(filter: searchText), id: \.self) { category in
-          CategoryView(category: category, tintColor: .materialGrey800)
+    VStack {
+      if viewModel.isLoading {
+        GeometryReader { geo in
+          LoadingView(height: geo.frame(in: .global).size.height)
         }
+      } else {
+        DashboardCardsListView(cardViewItems: viewModel.cardViewItems)
+          .searchable(text: $searchText) {
+            ForEach(viewModel.filteredCategories(filter: searchText), id: \.self) { category in
+              CategoryView(category: category, tintColor: .materialGrey800)
+            }
+          }
+          .refreshable {
+            viewModel.refresh()
+          }
       }
-      .refreshable {
+    }
+    .background(Color.primaryBackgroundColor)
+    .navigationTitle("Dashboard")
+    .onAppear {
+      if viewModel.dashboard == nil {
         viewModel.refresh()
       }
-      .onAppear {
-        if !isDataLoaded {
-          viewModel.refresh()
-          isDataLoaded = true
-        }
-      }
-      .alert(isPresented: $showingAlert, content: {
-        Alert(title: Text("Error Occured"),
-              message: Text("\(viewModel.error?.localizedDescription ?? "")"),
-              dismissButton: .cancel())
-      })
-      .onReceive(viewModel.$error, perform: { error in
-        self.showingAlert = error != nil
-      })
+    }
+    .alert(isPresented: $showingAlert, content: {
+      Alert(title: Text("Error Occured"),
+            message: Text("\(viewModel.error?.localizedDescription ?? "")"),
+            dismissButton: .cancel())
+    })
+    .onReceive(viewModel.$error, perform: { error in
+      self.showingAlert = error != nil
+    })
   }
 }
 

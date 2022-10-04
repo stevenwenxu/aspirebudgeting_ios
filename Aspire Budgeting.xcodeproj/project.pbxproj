@@ -16,8 +16,6 @@
 		0601E3E024FB15A6005E3C9D /* GoogleSheetsValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0601E3DF24FB15A6005E3C9D /* GoogleSheetsValidatorTests.swift */; };
 		0601E3E224FD9335005E3C9D /* MockSpreadsheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0601E3E124FD9335005E3C9D /* MockSpreadsheet.swift */; };
 		060494D325AD215C00922C3B /* ValueRangeCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060494D225AD215C00922C3B /* ValueRangeCreator.swift */; };
-		060CDA6A238F6AD2005CD74B /* CollapsedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CDA69238F6AD2005CD74B /* CollapsedCardView.swift */; };
-		060CDA6D238F78BA005CD74B /* ExpandedCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060CDA6C238F78BA005CD74B /* ExpandedCardView.swift */; };
 		061EEF30239DB75700A684EB /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061EEF2F239DB75700A684EB /* AddTransactionView.swift */; };
 		061EEF3223A1F7D300A684EB /* AspireTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061EEF3123A1F7D300A684EB /* AspireTextField.swift */; };
 		061F103823776D1700089D11 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061F103723776D1700089D11 /* StateManager.swift */; };
@@ -32,7 +30,6 @@
 		065D909525CF2FCB00185786 /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D909425CF2FCB00185786 /* TransactionsView.swift */; };
 		065D90A325CF82ED00185786 /* TransactionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065D90A225CF82ED00185786 /* TransactionsViewModel.swift */; };
 		065F03D0236DEF78005AED12 /* ErrorBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03CF236DEF78005AED12 /* ErrorBannerView.swift */; };
-		065F03D2236E2385005AED12 /* DashboardRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03D1236E2385005AED12 /* DashboardRow.swift */; };
 		066C3F31244E4732003CDE73 /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 066C3F30244E4732003CDE73 /* Nunito-SemiBold.ttf */; };
 		066C3F33244E67CD003CDE73 /* AspirePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066C3F32244E67CD003CDE73 /* AspirePickerButton.swift */; };
 		066C3F352453560E003CDE73 /* AspireRadioControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066C3F342453560D003CDE73 /* AspireRadioControl.swift */; };
@@ -142,8 +139,6 @@
 		0601E3DF24FB15A6005E3C9D /* GoogleSheetsValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSheetsValidatorTests.swift; sourceTree = "<group>"; };
 		0601E3E124FD9335005E3C9D /* MockSpreadsheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSpreadsheet.swift; sourceTree = "<group>"; };
 		060494D225AD215C00922C3B /* ValueRangeCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueRangeCreator.swift; sourceTree = "<group>"; };
-		060CDA69238F6AD2005CD74B /* CollapsedCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsedCardView.swift; sourceTree = "<group>"; };
-		060CDA6C238F78BA005CD74B /* ExpandedCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardView.swift; sourceTree = "<group>"; };
 		06157EAB24131235000161C3 /* bad_instabug.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = bad_instabug.plist; sourceTree = "<group>"; };
 		061EEF2F239DB75700A684EB /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
 		061EEF3123A1F7D300A684EB /* AspireTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireTextField.swift; sourceTree = "<group>"; };
@@ -159,7 +154,6 @@
 		065D909425CF2FCB00185786 /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
 		065D90A225CF82ED00185786 /* TransactionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsViewModel.swift; sourceTree = "<group>"; };
 		065F03CF236DEF78005AED12 /* ErrorBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBannerView.swift; sourceTree = "<group>"; };
-		065F03D1236E2385005AED12 /* DashboardRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardRow.swift; sourceTree = "<group>"; };
 		066C3F30244E4732003CDE73 /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
 		066C3F32244E67CD003CDE73 /* AspirePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspirePickerButton.swift; sourceTree = "<group>"; };
 		066C3F342453560D003CDE73 /* AspireRadioControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireRadioControl.swift; sourceTree = "<group>"; };
@@ -283,10 +277,7 @@
 			children = (
 				0685BBB8250EC76600728228 /* DashboardCardsListView.swift */,
 				0694C2222369EDB90039528A /* DashboardView.swift */,
-				065F03D1236E2385005AED12 /* DashboardRow.swift */,
 				065C717B2382075200DB46B2 /* DashboardCardView.swift */,
-				060CDA69238F6AD2005CD74B /* CollapsedCardView.swift */,
-				060CDA6C238F78BA005CD74B /* ExpandedCardView.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -774,8 +765,6 @@
 				06BE37AE251ECB50000CF5C9 /* AspireNumberView.swift in Sources */,
 				065D909525CF2FCB00185786 /* TransactionsView.swift in Sources */,
 				066EF462235D4FBD00E94CE4 /* SignInView.swift in Sources */,
-				065F03D2236E2385005AED12 /* DashboardRow.swift in Sources */,
-				060CDA6A238F6AD2005CD74B /* CollapsedCardView.swift in Sources */,
 				3E43670326D9C00F001421A8 /* CategoryTransferViewModel.swift in Sources */,
 				062F2BBF24EEDA7E004830F8 /* AppDefaults.swift in Sources */,
 				066C3F352453560E003CDE73 /* AspireRadioControl.swift in Sources */,
@@ -786,7 +775,6 @@
 				06B0A23825A68D2700E8DFBB /* Transaction.swift in Sources */,
 				06D4529325168C8900BFEE02 /* CardTotalsView.swift in Sources */,
 				3E1E6A0D269A5C490089EA56 /* MockAuthorizer.swift in Sources */,
-				060CDA6D238F78BA005CD74B /* ExpandedCardView.swift in Sources */,
 				06BAAFE4239C578400F24BF2 /* AspireMasterView.swift in Sources */,
 				060494D325AD215C00922C3B /* ValueRangeCreator.swift in Sources */,
 				06AB2C8223627B2D0076516E /* File.swift in Sources */,
