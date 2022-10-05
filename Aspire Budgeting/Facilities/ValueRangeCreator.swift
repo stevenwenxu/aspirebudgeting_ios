@@ -17,9 +17,9 @@ enum ValueRangeCreator {
 
     var valuesToInsert = [String]()
     valuesToInsert.append(dateFormatter.string(from: Date()))
-    valuesToInsert.append(categoryTransfer.amount)
     valuesToInsert.append(categoryTransfer.fromCategory.title)
     valuesToInsert.append(categoryTransfer.toCategory.title)
+    valuesToInsert.append(categoryTransfer.amount)
     valuesToInsert.append(categoryTransfer.memo ?? "")
 
     valueRange.values = [valuesToInsert]

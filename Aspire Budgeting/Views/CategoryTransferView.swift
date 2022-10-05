@@ -14,6 +14,7 @@ struct CategoryTransferView: View {
   @State private var toCategory = TrxCategory(title: "")
   @State private var showSuccessAlert = false
   @State private var showError = false
+  @Environment(\.dismiss) private var dismiss
 
   var body: some View {
     Form {
@@ -86,14 +87,18 @@ struct CategoryTransferView: View {
       })
       .disabled(amountString.isEmpty || fromCategory.title.isEmpty || toCategory.title.isEmpty)
       .interactiveDismissDisabled()
-      .alert(isPresented: $showSuccessAlert) {
-        Alert(title: Text("Category Transfer submitted"))
-      }
-      .alert(isPresented: $showError) {
-        Alert(title: Text("Error Occured"),
-              message: Text("\(viewModel.error?.localizedDescription ?? "")"),
-              dismissButton: .cancel())
-      }
+      .alert("Category Transfer submitted", isPresented: $showSuccessAlert, actions: {
+        Button("OK") {
+          dismiss()
+        }
+      })
+      .alert("Error occured", isPresented: $showError, actions: {
+        Button("OK") {
+          dismiss()
+        }
+      }, message: {
+        Text(viewModel.error?.localizedDescription ?? "")
+      })
     }
     .onAppear { viewModel.getCategories() }
     .onReceive(viewModel.$signal, perform: { signal in
