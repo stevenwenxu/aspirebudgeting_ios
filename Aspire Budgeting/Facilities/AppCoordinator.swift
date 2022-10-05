@@ -14,6 +14,7 @@ final class AppCoordinator: ObservableObject {
   private let userManager: UserManager
   private let fileValidator: FileValidator
   private let contentProvider: ContentProvider
+  private let scriptManager: GoogleScriptManager
 
   private var cancellables = Set<AnyCancellable>()
 
@@ -42,7 +43,9 @@ final class AppCoordinator: ObservableObject {
        remoteFileManager: RemoteFileManager,
        userManager: UserManager,
        fileValidator: FileValidator,
-       contentProvider: ContentProvider) {
+       contentProvider: ContentProvider,
+       scriptManager: GoogleScriptManager
+  ) {
     self.stateManager = stateManager
     self.localAuthorizer = localAuthorizer
     self.appDefaults = appDefaults
@@ -50,6 +53,7 @@ final class AppCoordinator: ObservableObject {
     self.userManager = userManager
     self.fileValidator = fileValidator
     self.contentProvider = contentProvider
+    self.scriptManager = scriptManager
   }
 
   private func setupViewModels(for user: User, sheet: AspireSheet) {
@@ -86,7 +90,9 @@ final class AppCoordinator: ObservableObject {
         changeSheet: {
 
         },
-        fileSelectorVM: fileSelectorVM
+        fileSelectorVM: fileSelectorVM,
+        user: user,
+        scriptManager: scriptManager
       )
 
     categoryTransferViewModel =

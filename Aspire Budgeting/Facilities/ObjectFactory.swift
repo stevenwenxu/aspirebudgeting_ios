@@ -65,6 +65,11 @@ final class ObjectFactory {
     AuthenticationManager(userManager: userManager)
   }()
 
+  lazy var scriptManager: GoogleScriptManager = {
+    let manager = GoogleScriptManager()
+    return manager
+  }()
+
   lazy var appCoordinator: AppCoordinator = {
     AppCoordinator(stateManager: stateManager,
                    localAuthorizer: localAuthorizationManager,
@@ -72,6 +77,8 @@ final class ObjectFactory {
                    remoteFileManager: driveManager,
                    userManager: userManager,
                    fileValidator: googleValidator,
-                   contentProvider: googleContentManager)
+                   contentProvider: googleContentManager,
+                   scriptManager: scriptManager
+    )
   }()
 }

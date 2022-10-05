@@ -13,6 +13,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   private var driveManager: GoogleDriveManager!
   private var sheetsManager: GoogleSheetsManager!
+  private var scriptManager: GoogleScriptManager!
   private var localAuthorizationManager: LocalAuthorizationManager!
   private var stateManager: StateManager!
 
@@ -40,6 +41,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     if sheetsManager == nil {
       sheetsManager = objectFactory.sheetsManager
+    }
+
+    if scriptManager == nil {
+      scriptManager = objectFactory.scriptManager
     }
 
     if localAuthorizationManager == nil {

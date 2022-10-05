@@ -117,6 +117,7 @@
 		8D52A640C3D198885D3A12E6 /* Pods_Aspire_Budgeting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8996E894932F10AFA501C123 /* Pods_Aspire_Budgeting.framework */; };
 		B089078228E5397200BBB002 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B089078128E5397200BBB002 /* OrderedCollections */; };
 		B089078428E7E54500BBB002 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078328E7E54500BBB002 /* CategoryView.swift */; };
+		B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -247,6 +248,7 @@
 		847C77A94AB6399935241E26 /* Pods-Aspire BudgetingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire BudgetingTests.release.xcconfig"; path = "Target Support Files/Pods-Aspire BudgetingTests/Pods-Aspire BudgetingTests.release.xcconfig"; sourceTree = "<group>"; };
 		8996E894932F10AFA501C123 /* Pods_Aspire_Budgeting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aspire_Budgeting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B089078328E7E54500BBB002 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleScriptManager.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -385,6 +387,7 @@
 				060494D225AD215C00922C3B /* ValueRangeCreator.swift */,
 				3E5B7DFD2690AFEE005B590D /* Publisher+Extensions.swift */,
 				3ED459FE269965D9001563E3 /* AuthenticationManager.swift */,
+				B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */,
 			);
 			path = Facilities;
 			sourceTree = "<group>";
@@ -794,6 +797,7 @@
 				0685BBB9250EC76600728228 /* DashboardCardsListView.swift in Sources */,
 				069F830624FFFC76009DD3E9 /* DashboardViewModel.swift in Sources */,
 				0694C2232369EDB90039528A /* DashboardView.swift in Sources */,
+				B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */,
 				06BC51BE264F4A6500E4BC8B /* SettingsViewModel.swift in Sources */,
 				06ED8A63235A908E009BA6A7 /* AppDelegate.swift in Sources */,
 				061EEF30239DB75700A684EB /* AddTransactionView.swift in Sources */,

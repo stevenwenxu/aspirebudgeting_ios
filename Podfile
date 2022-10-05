@@ -8,6 +8,7 @@ target 'Aspire Budgeting' do
   # Pods for Aspire Budgeting
   pod 'GoogleAPIClientForREST/Sheets'
   pod 'GoogleAPIClientForREST/Drive'
+  pod 'GoogleAPIClientForREST/Script'
   pod 'GoogleSignIn'
   target 'Aspire BudgetingTests' do
     inherit! :search_paths

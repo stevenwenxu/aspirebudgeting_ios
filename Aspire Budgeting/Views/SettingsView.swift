@@ -10,6 +10,7 @@ struct SettingsView: View {
 
   @State private var showShareSheet = false
   @State private var showFileSelector = false
+  @State private var budgetUpdateResult: Result<Bool>?
 
   var body: some View {
     Form {
@@ -24,6 +25,14 @@ struct SettingsView: View {
         Button("Export Log File") {
             showShareSheet = true
         }
+
+        Spacer()
+
+        Button("Update budget") {
+          viewModel.scriptManager.run(for: viewModel.user, function: "topUpMonthlyBudget", params: nil) { result in
+            budgetUpdateResult = result
+          }
+        }
       }
     }.sheet(isPresented: $showShareSheet) {
       ShareSheet(activityItems: [logURL])
@@ -31,6 +40,22 @@ struct SettingsView: View {
     .sheet(isPresented: $showFileSelector) {
       FileSelectorView(viewModel: viewModel.fileSelectorVM)
     }
+    .alert("Update budget", isPresented: Binding(get: {
+      budgetUpdateResult != nil
+    }, set: { _ in
+      budgetUpdateResult = nil
+    }), actions: {}, message: {
+      switch budgetUpdateResult {
+      case .success(let val) where val:
+        Text("Success!")
+      case .success:
+        Text("Script is still going??")
+      case .failure(let error):
+        Text("Failed to update budget. Error: \(error.localizedDescription)")
+      case .none:
+        Text("This should never happen")
+      }
+    })
     .onReceive(
       viewModel
         .fileSelectorVM

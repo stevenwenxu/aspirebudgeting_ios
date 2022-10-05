@@ -73,7 +73,7 @@ final class GoogleUserManager: NSObject, GIDSignInDelegate, UserManager {
     )
     gidSignInInstance.clientID = credentials.CLIENT_ID
     gidSignInInstance.delegate = self
-    gidSignInInstance.scopes = [kGTLRAuthScopeDrive, kGTLRAuthScopeSheetsDrive]
+    gidSignInInstance.scopes = [kGTLRAuthScopeDrive, kGTLRAuthScopeSheetsDrive, kGTLRAuthScopeSheetsSpreadsheets]
     gidSignInInstance.restorePreviousSignIn()
   }
 
