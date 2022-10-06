@@ -44,6 +44,7 @@ struct AspireTextField: View {
           .font(.nunitoSemiBold(size: 20))
           .disabled(disabled)
           .frame(height: 40)
+          .disableAutocorrection(true)
           .overlay(
             RoundedRectangle(cornerRadius: 5)
               .stroke(Color(#colorLiteral(red: 0.8470588326454163, green: 0.8470588326454163, blue: 0.8470588326454163, alpha: 1)), lineWidth: 1)

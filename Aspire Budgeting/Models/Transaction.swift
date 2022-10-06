@@ -52,6 +52,44 @@ struct Transaction: Hashable {
 }
 
 extension Transaction {
+  var param: [String] {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MM/dd/yyyy"
+
+    let inflow: String
+    let outflow: String
+    let status: String
+
+    switch transactionType {
+    case .inflow:
+      inflow = amount
+      outflow = ""
+    case .outflow:
+      inflow = ""
+      outflow = amount
+    }
+
+    switch approvalType {
+    case .pending:
+      status = "🅿️"
+    case .approved:
+      status = "✅"
+    case .reconcile:
+      status = "*️⃣"
+    }
+
+    return [
+      dateFormatter.string(from: date),
+      account,
+      payee,
+      category,
+      memo,
+      outflow,
+      inflow,
+      status
+    ]
+  }
+
   func contains(_ text: String) -> Bool {
     self.amount.caseInsensitiveCompare(text) ||
       self.memo.lowercased().contains(text.lowercased()) ||

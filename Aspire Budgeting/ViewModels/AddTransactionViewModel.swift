@@ -10,12 +10,14 @@ typealias SubmitResultHandler = (Result<Void>) -> Void
 struct AddTrxDataProvider {
   let transactionCategories: [String]
   let transactionAccounts: [String]
+  let payees: [String]
   let submit: (Transaction, @escaping SubmitResultHandler) -> Void
 
   init(metadata: AddTransactionMetadata,
        submitAction: @escaping (Transaction, @escaping SubmitResultHandler) -> Void) {
     self.transactionCategories = metadata.transactionCategories
     self.transactionAccounts = metadata.transactionAccounts
+    self.payees = metadata.payees
     self.submit = submitAction
   }
 }

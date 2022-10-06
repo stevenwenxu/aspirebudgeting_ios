@@ -184,23 +184,14 @@ extension AppCoordinator {
   }
 
   func submit(transaction: Transaction, resultHandler: @escaping SubmitResultHandler) {
-    self.contentProvider
-      .write(
-        data: transaction,
-        for: self.user!,
-        to: self.selectedSheet!.file,
-        using: self.selectedSheet!.dataMap
-      )
-      .sink { completion in
-        switch completion {
-        case .finished:
-          resultHandler(.success(()))
-
-        case let .failure(error):
-          resultHandler(.failure(error))
-        }
-      } receiveValue: { _ in }
-      .store(in: &cancellables)
+    scriptManager.addTransaction(for: user!, transaction: transaction) { result in
+      switch result {
+      case .success:
+        resultHandler(.success(()))
+      case .failure(let error):
+        resultHandler(.failure(error))
+      }
+    }
   }
 
   func changeSheet() {

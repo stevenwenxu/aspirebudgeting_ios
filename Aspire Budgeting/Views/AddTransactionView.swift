@@ -8,6 +8,7 @@ import SwiftUI
 struct AddTransactionView: View {
   enum Field {
     case amount
+    case customPayee
     case memo
   }
 
@@ -20,6 +21,8 @@ struct AddTransactionView: View {
 
   @State private var selectedCategory = ""
   @State private var selectedAccount = ""
+  @State private var selectedPayee = ""
+  @State private var customPayee = ""
 
   @State private var transactionType = TransactionType.outflow
   @State private var approvalType = ApprovalType.pending
@@ -27,7 +30,11 @@ struct AddTransactionView: View {
   @State private var showAlert = false
   @State private var alertText = ""
 
+  @State private var payeeSearchText = ""
+
   @FocusState private var focusedField: Field?
+
+  @Environment(\.dismiss) private var dismiss
 
   func callback(result: Result<Void>) {
     switch result {
@@ -39,6 +46,12 @@ struct AddTransactionView: View {
     showAlert = true
   }
 
+  var filteredPayees: [String] {
+    let payees = viewModel.dataProvider?.payees ?? []
+    let searchTerm = payeeSearchText.lowercased()
+    return searchTerm.isEmpty ? payees : payees.filter { $0.lowercased().contains(searchTerm) }
+  }
+
   var body: some View {
     Form {
       Picker("Transaction type", selection: $transactionType) {
@@ -47,7 +60,9 @@ struct AddTransactionView: View {
       }
       .pickerStyle(.segmented)
       .onChange(of: transactionType) { _ in
-        focusedField = nil
+        DispatchQueue.main.async {
+          focusedField = nil
+        }
       }
 
       AspireTextField(
@@ -78,7 +93,46 @@ struct AddTransactionView: View {
           }
         )
         .onChange(of: selectedCategory) { _ in
-          focusedField = nil
+          DispatchQueue.main.async {
+            focusedField = nil
+          }
+        }
+
+        if customPayee.isEmpty {
+          Picker(
+            selection: $selectedPayee,
+            content: {
+              SearchBar(text: $payeeSearchText)
+              ForEach(filteredPayees, id: \.self) {
+                Text($0)
+              }
+            },
+            label: {
+              HStack {
+                Image.envelope
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 30, height: 30, alignment: .center)
+                Text("Payee")
+                  .font(.nunitoSemiBold(size: 20))
+              }
+            }
+          )
+          .onChange(of: selectedAccount) { _ in
+            DispatchQueue.main.async {
+              focusedField = nil
+            }
+          }
+        }
+
+        if selectedPayee.isEmpty {
+          AspireTextField(
+            text: $customPayee,
+            placeHolder: "New Payee",
+            keyboardType: .default,
+            leftImage: Image.envelope
+          )
+          .focused($focusedField, equals: .customPayee)
         }
 
         Picker(
@@ -100,7 +154,9 @@ struct AddTransactionView: View {
           }
         )
         .onChange(of: selectedAccount) { _ in
-          focusedField = nil
+          DispatchQueue.main.async {
+            focusedField = nil
+          }
         }
       }
 
@@ -123,7 +179,9 @@ struct AddTransactionView: View {
       }
       .pickerStyle(.segmented)
       .onChange(of: approvalType) { _ in
-        focusedField = nil
+        DispatchQueue.main.async {
+          focusedField = nil
+        }
       }
 
       AspireTextField(
@@ -145,7 +203,7 @@ struct AddTransactionView: View {
           category: selectedCategory,
           transactionType: transactionType,
           approvalType: approvalType,
-          payee: "TODO"
+          payee: selectedPayee.isEmpty ? customPayee : selectedPayee
         )
         self.viewModel.dataProvider?.submit(transaction, self.callback)
       }, label: {
@@ -153,16 +211,20 @@ struct AddTransactionView: View {
           .font(.nunitoSemiBold(size: 20))
       })
       .buttonStyle(.borderless)
-      .disabled(amountString.isEmpty || selectedCategory.isEmpty || selectedAccount.isEmpty)
-      .alert(isPresented: $showAlert) {
-        Alert(title: Text(alertText))
-      }
+      .disabled(amountString.isEmpty || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
+      .alert(alertText, isPresented: $showAlert, actions: {
+        Button("OK") {
+          dismiss()
+        }
+      })
     }
     .interactiveDismissDisabled()
     .navigationTitle("Add Transaction")
     .background(Color.primaryBackgroundColor)
     .onAppear {
-      self.viewModel.refresh()
+      if viewModel.dataProvider?.transactionAccounts.isEmpty ?? true {
+        self.viewModel.refresh()
+      }
     }
   }
 }

@@ -29,7 +29,7 @@ struct SettingsView: View {
         Spacer()
 
         Button("Update budget") {
-          viewModel.scriptManager.run(for: viewModel.user, function: "topUpMonthlyBudget", params: nil) { result in
+          viewModel.scriptManager.updateBudget(for: viewModel.user) { result in
             budgetUpdateResult = result
           }
         }

@@ -206,23 +206,8 @@ extension GoogleContentManager {
     case is AddTransactionMetadata.Type:
       return [getTrxCategoriesRange(for: version),
               getTrxAccountsRange(for: version),
+              getPayees(for: version)
       ]
-    default:
-      Logger.info("Data requested for unknown type \(T.self)")
-      return nil
-    }
-  }
-
-  private func getRanges<T>(of type: T.Type, from dataMap: [String: String]) -> [String]? {
-    switch T.self {
-    case is AddTransactionMetadata.Type:
-      guard let trxCategories = dataMap[kTrxCategories],
-            let trxAccounts = dataMap[kTrxAccounts] else {
-        Logger.error("No named range found for: ",
-                     context: "\(kTrxCategories) or \(kTrxAccounts)")
-        return nil
-      }
-      return [trxCategories, trxAccounts]
     default:
       Logger.info("Data requested for unknown type \(T.self)")
       return nil
@@ -336,6 +321,16 @@ extension GoogleContentManager {
       range = "BackendData!M2:M"
     }
     return range
+  }
+
+  private func getPayees(for supportedVersion: SupportedLegacyVersion) -> String {
+    switch supportedVersion {
+    case .threeThree:
+      return "Payees"
+    default:
+      Logger.error("Payee not supported on this version")
+      return ""
+    }
   }
 
   private func createValueRange<T>(from data: T) -> GTLRSheets_ValueRange? {
