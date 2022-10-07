@@ -14,7 +14,9 @@ struct AddTransactionView: View {
 
   let viewModel: AddTransactionViewModel
 
-  @State private var amountString = ""
+  @State private var amount: Double?
+  @State private var amountColor: UIColor = .red
+
   @State private var memoString = ""
 
   @State private var selectedDate = Date()
@@ -25,7 +27,7 @@ struct AddTransactionView: View {
   @State private var customPayee = ""
 
   @State private var transactionType = TransactionType.outflow
-  @State private var approvalType = ApprovalType.pending
+  @State private var pending = true
 
   @State private var showAlert = false
   @State private var alertText = ""
@@ -59,66 +61,36 @@ struct AddTransactionView: View {
         Text("Outflow").tag(TransactionType.outflow)
       }
       .pickerStyle(.segmented)
-      .onChange(of: transactionType) { _ in
+      .onChange(of: transactionType) { newVal in
         DispatchQueue.main.async {
           focusedField = nil
+          switch newVal {
+          case .inflow:
+            amountColor = .green
+          case .outflow:
+            amountColor = .red
+          }
         }
       }
 
-      AspireTextField(
-        text: $amountString,
-        placeHolder: "Amount",
-        keyboardType: .decimalPad,
-        leftImage: Image.bankNote
+      CurrencyTextField(
+        "Amount",
+        value: $amount,
+        foregroundColor: $amountColor,
+        textAlignment: .center
       )
+      .font(.title)
       .focused($focusedField, equals: .amount)
 
-      if let dataProvider = self.viewModel.dataProvider {
-        Picker(
-          selection: $selectedCategory,
-          content: {
-            ForEach(dataProvider.transactionCategories, id: \.self) {
+      Section {
+        if customPayee.isEmpty {
+          Picker("Payee", selection: $selectedPayee) {
+            SearchBar(text: $payeeSearchText)
+            ForEach(filteredPayees, id: \.self) {
               Text($0)
             }
-          },
-          label: {
-            HStack {
-              Image.envelope
-                .resizable()
-                .scaledToFit()
-                .frame(width: 30, height: 30, alignment: .center)
-              Text("Category")
-                .font(.nunitoSemiBold(size: 20))
-            }
           }
-        )
-        .onChange(of: selectedCategory) { _ in
-          DispatchQueue.main.async {
-            focusedField = nil
-          }
-        }
-
-        if customPayee.isEmpty {
-          Picker(
-            selection: $selectedPayee,
-            content: {
-              SearchBar(text: $payeeSearchText)
-              ForEach(filteredPayees, id: \.self) {
-                Text($0)
-              }
-            },
-            label: {
-              HStack {
-                Image.envelope
-                  .resizable()
-                  .scaledToFit()
-                  .frame(width: 30, height: 30, alignment: .center)
-                Text("Payee")
-                  .font(.nunitoSemiBold(size: 20))
-              }
-            }
-          )
-          .onChange(of: selectedAccount) { _ in
+          .onChange(of: selectedPayee) { _ in
             DispatchQueue.main.async {
               focusedField = nil
             }
@@ -126,97 +98,72 @@ struct AddTransactionView: View {
         }
 
         if selectedPayee.isEmpty {
-          AspireTextField(
-            text: $customPayee,
-            placeHolder: "New Payee",
-            keyboardType: .default,
-            leftImage: Image.envelope
-          )
-          .focused($focusedField, equals: .customPayee)
+          TextField("New Payee", text: $customPayee)
+            .focused($focusedField, equals: .customPayee)
         }
 
-        Picker(
-          selection: $selectedAccount,
-          content: {
+        if let dataProvider = self.viewModel.dataProvider {
+          Picker("Category", selection: $selectedCategory) {
+            ForEach(dataProvider.transactionCategories, id: \.self) {
+              Text($0)
+            }
+          }
+          .onChange(of: selectedCategory) { _ in
+            DispatchQueue.main.async {
+              focusedField = nil
+            }
+          }
+
+          Picker("Account", selection: $selectedAccount) {
             ForEach(dataProvider.transactionAccounts, id: \.self) {
               Text($0)
             }
-          },
-          label: {
-            HStack {
-              Image.creditCard
-                .resizable()
-                .scaledToFit()
-                .frame(width: 30, height: 30, alignment: .center)
-              Text("Account")
-                .font(.nunitoSemiBold(size: 20))
+          }
+          .onChange(of: selectedAccount) { _ in
+            DispatchQueue.main.async {
+              focusedField = nil
             }
           }
-        )
-        .onChange(of: selectedAccount) { _ in
+        }
+
+        DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
+      }
+
+      Section {
+        Toggle(isOn: $pending) {
+          Text("Pending")
+        }
+        .onChange(of: pending) { _ in
           DispatchQueue.main.async {
             focusedField = nil
           }
         }
+
+        TextField("Memo", text: $memoString)
+          .focused($focusedField, equals: .memo)
       }
 
-      DatePicker(selection: $selectedDate,
-                 displayedComponents: .date) {
-        HStack {
-          Image(systemName: "calendar")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 30, height: 30, alignment: .center)
-
-          Text("Date: ")
-            .font(.nunitoSemiBold(size: 20))
+      Section {
+        Button("Add Transaction") {
+          let transaction = Transaction(
+            amount: String(amount!),
+            memo: memoString,
+            date: selectedDate,
+            account: selectedAccount,
+            category: selectedCategory,
+            transactionType: transactionType,
+            approvalType: pending ? .pending : .approved,
+            payee: selectedPayee.isEmpty ? customPayee : selectedPayee
+          )
+          viewModel.dataProvider?.submit(transaction, self.callback)
         }
+        .disabled(amount == nil || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
+        .alert(alertText, isPresented: $showAlert, actions: {
+          Button("OK") {
+            dismiss()
+          }
+        })
       }
-
-      Picker("Approval Type", selection: $approvalType) {
-        Text("Approved").tag(ApprovalType.approved)
-        Text("Pending").tag(ApprovalType.pending)
-      }
-      .pickerStyle(.segmented)
-      .onChange(of: approvalType) { _ in
-        DispatchQueue.main.async {
-          focusedField = nil
-        }
-      }
-
-      AspireTextField(
-        text: $memoString,
-        placeHolder: "Memo",
-        keyboardType: .default,
-        leftImage: Image.scribble
-      )
-      .focused($focusedField, equals: .memo)
-
-      Spacer()
-
-      Button(action: {
-        let transaction = Transaction(
-          amount: amountString,
-          memo: memoString,
-          date: selectedDate,
-          account: selectedAccount,
-          category: selectedCategory,
-          transactionType: transactionType,
-          approvalType: approvalType,
-          payee: selectedPayee.isEmpty ? customPayee : selectedPayee
-        )
-        self.viewModel.dataProvider?.submit(transaction, self.callback)
-      }, label: {
-        Text("Add Transaction")
-          .font(.nunitoSemiBold(size: 20))
-      })
-      .buttonStyle(.borderless)
-      .disabled(amountString.isEmpty || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
-      .alert(alertText, isPresented: $showAlert, actions: {
-        Button("OK") {
-          dismiss()
-        }
-      })
     }
     .interactiveDismissDisabled()
     .navigationTitle("Add Transaction")

@@ -118,6 +118,7 @@
 		B089078228E5397200BBB002 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B089078128E5397200BBB002 /* OrderedCollections */; };
 		B089078428E7E54500BBB002 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078328E7E54500BBB002 /* CategoryView.swift */; };
 		B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */; };
+		B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078D28EE77F300BBB002 /* CurrencyTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +250,7 @@
 		8996E894932F10AFA501C123 /* Pods_Aspire_Budgeting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Aspire_Budgeting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B089078328E7E54500BBB002 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleScriptManager.swift; sourceTree = "<group>"; };
+		B089078D28EE77F300BBB002 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -319,6 +321,7 @@
 				06BC51B9264F47C400E4BC8B /* SettingsView.swift */,
 				3EDC12D0267564AE006A133D /* ShareSheet.swift */,
 				3E43670826D9C647001421A8 /* CategoryTransferView.swift */,
+				B089078D28EE77F300BBB002 /* CurrencyTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -800,6 +803,7 @@
 				B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */,
 				06BC51BE264F4A6500E4BC8B /* SettingsViewModel.swift in Sources */,
 				06ED8A63235A908E009BA6A7 /* AppDelegate.swift in Sources */,
+				B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */,
 				061EEF30239DB75700A684EB /* AddTransactionView.swift in Sources */,
 				3ED45A01269A1102001563E3 /* AspireSheet.swift in Sources */,
 				06A96052235FD2A60058EE64 /* ObjectFactory.swift in Sources */,
