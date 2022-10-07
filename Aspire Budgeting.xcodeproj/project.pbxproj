@@ -119,6 +119,7 @@
 		B089078428E7E54500BBB002 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078328E7E54500BBB002 /* CategoryView.swift */; };
 		B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */; };
 		B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078D28EE77F300BBB002 /* CurrencyTextField.swift */; };
+		B089079028EFC45D00BBB002 /* PayeeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078F28EFC45D00BBB002 /* PayeeStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -251,6 +252,7 @@
 		B089078328E7E54500BBB002 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleScriptManager.swift; sourceTree = "<group>"; };
 		B089078D28EE77F300BBB002 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
+		B089078F28EFC45D00BBB002 /* PayeeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeStorage.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -391,6 +393,7 @@
 				3E5B7DFD2690AFEE005B590D /* Publisher+Extensions.swift */,
 				3ED459FE269965D9001563E3 /* AuthenticationManager.swift */,
 				B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */,
+				B089078F28EFC45D00BBB002 /* PayeeStorage.swift */,
 			);
 			path = Facilities;
 			sourceTree = "<group>";
@@ -830,6 +833,7 @@
 				061F103823776D1700089D11 /* StateManager.swift in Sources */,
 				06A227B223EF768200B5BAF0 /* AspireVersionInfo.swift in Sources */,
 				3E43670526D9C2AB001421A8 /* TrxCategory.swift in Sources */,
+				B089079028EFC45D00BBB002 /* PayeeStorage.swift in Sources */,
 				3ED459FF269965D9001563E3 /* AuthenticationManager.swift in Sources */,
 				06C6B5A324F2165E00968C60 /* LoadingView.swift in Sources */,
 				068B12A0258EB2A5006B64FE /* BannerView.swift in Sources */,

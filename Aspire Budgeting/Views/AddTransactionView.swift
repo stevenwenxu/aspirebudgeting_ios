@@ -29,6 +29,7 @@ struct AddTransactionView: View {
   @State private var transactionType = TransactionType.outflow
   @State private var pending = true
 
+  @State private var submittingInProgress = false
   @State private var showAlert = false
   @State private var alertText = ""
 
@@ -38,20 +39,20 @@ struct AddTransactionView: View {
 
   @Environment(\.dismiss) private var dismiss
 
-  func callback(result: Result<Void>) {
-    switch result {
-    case .success:
-      alertText = "Transaction added"
-    case .failure(let error):
-      alertText = error.localizedDescription
-    }
-    showAlert = true
-  }
-
   var filteredPayees: [String] {
     let payees = viewModel.dataProvider?.payees ?? []
     let searchTerm = payeeSearchText.lowercased()
     return searchTerm.isEmpty ? payees : payees.filter { $0.lowercased().contains(searchTerm) }
+  }
+
+  var sortedCategories: [String] {
+    let unsorted = viewModel.dataProvider?.transactionCategories ?? []
+    return selectedPayee.isEmpty ? unsorted : PayeeStorage.orderedCategories(for: selectedPayee, unorderedCategories: unsorted)
+  }
+
+  var sortedAccounts: [String] {
+    let unsorted = viewModel.dataProvider?.transactionAccounts ?? []
+    return selectedPayee.isEmpty ? unsorted : PayeeStorage.orderedAccounts(for: selectedPayee, unorderedAccounts: unsorted)
   }
 
   var body: some View {
@@ -93,6 +94,14 @@ struct AddTransactionView: View {
           .onChange(of: selectedPayee) { _ in
             DispatchQueue.main.async {
               focusedField = nil
+
+              // autofill recent category and account if they're empty
+              if selectedCategory.isEmpty, let recentCategory = PayeeStorage.recentCategory(for: selectedPayee) {
+                selectedCategory = recentCategory
+              }
+              if selectedAccount.isEmpty, let recentAccount = PayeeStorage.recentAccount(for: selectedPayee) {
+                selectedAccount = recentAccount
+              }
             }
           }
         }
@@ -102,32 +111,30 @@ struct AddTransactionView: View {
             .focused($focusedField, equals: .customPayee)
         }
 
-        if let dataProvider = self.viewModel.dataProvider {
-          Picker("Category", selection: $selectedCategory) {
-            ForEach(dataProvider.transactionCategories, id: \.self) {
-              Text($0)
-            }
+        Picker("Category", selection: $selectedCategory) {
+          ForEach(sortedCategories, id: \.self) {
+            Text($0)
           }
-          .onChange(of: selectedCategory) { _ in
-            DispatchQueue.main.async {
-              focusedField = nil
-            }
-          }
-
-          Picker("Account", selection: $selectedAccount) {
-            ForEach(dataProvider.transactionAccounts, id: \.self) {
-              Text($0)
-            }
-          }
-          .onChange(of: selectedAccount) { _ in
-            DispatchQueue.main.async {
-              focusedField = nil
-            }
+        }
+        .onChange(of: selectedCategory) { _ in
+          DispatchQueue.main.async {
+            focusedField = nil
           }
         }
 
-        DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
+        Picker("Account", selection: $selectedAccount) {
+          ForEach(sortedAccounts, id: \.self) {
+            Text($0)
+          }
+        }
+        .onChange(of: selectedAccount) { _ in
+          DispatchQueue.main.async {
+            focusedField = nil
+          }
+        }
       }
+
+      DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
 
       Section {
         Toggle(isOn: $pending) {
@@ -145,6 +152,12 @@ struct AddTransactionView: View {
 
       Section {
         Button("Add Transaction") {
+          submittingInProgress = true
+          let payee = selectedPayee.isEmpty ? customPayee : selectedPayee
+
+          PayeeStorage.set(recentCategory: selectedCategory, for: payee)
+          PayeeStorage.set(recentAccount: selectedAccount, for: payee)
+
           let transaction = Transaction(
             amount: String(amount!),
             memo: memoString,
@@ -153,16 +166,29 @@ struct AddTransactionView: View {
             category: selectedCategory,
             transactionType: transactionType,
             approvalType: pending ? .pending : .approved,
-            payee: selectedPayee.isEmpty ? customPayee : selectedPayee
+            payee: payee
           )
-          viewModel.dataProvider?.submit(transaction, self.callback)
+          viewModel.dataProvider?.submit(transaction) { result in
+            switch result {
+            case .success:
+              alertText = "Transaction added"
+            case .failure(let error):
+              alertText = error.localizedDescription
+            }
+            showAlert = true
+            submittingInProgress = false
+          }
         }
-        .disabled(amount == nil || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
+        .disabled(submittingInProgress || amount == nil || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
         .alert(alertText, isPresented: $showAlert, actions: {
           Button("OK") {
             dismiss()
           }
         })
+
+        if submittingInProgress {
+          ProgressView()
+        }
       }
     }
     .interactiveDismissDisabled()
@@ -175,9 +201,3 @@ struct AddTransactionView: View {
     }
   }
 }
-
-// struct AddTransactionView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AddTransactionView()
-//    }
-// }
