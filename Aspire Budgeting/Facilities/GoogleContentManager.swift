@@ -41,7 +41,7 @@ final class GoogleContentManager {
   private let fileWriter: RemoteFileWriter
   private var readSink: AnyCancellable!
 
-  private let kDashboard = "Dashboard"
+  private let kDashboard = "r_DashboardData"
   private let kAccountBalances = "Account Balances"
   private let kVersionLocation = "BackendData!2:2"
   private let kVersionNamedRange = "v_Version"

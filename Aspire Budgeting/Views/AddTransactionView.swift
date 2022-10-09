@@ -14,20 +14,14 @@ struct AddTransactionView: View {
 
   let viewModel: AddTransactionViewModel
 
+
   @State private var amount: Double?
   @State private var amountColor: Color = .expenseRed
 
-  @State private var memoString = ""
+  @State private var transaction: Transaction
 
-  @State private var selectedDate = Date()
-
-  @State private var selectedCategory = ""
-  @State private var selectedAccount = ""
   @State private var selectedPayee = ""
   @State private var customPayee = ""
-
-  @State private var transactionType = TransactionType.outflow
-  @State private var pending = true
 
   @State private var submittingInProgress = false
   @State private var showAlert = false
@@ -38,6 +32,12 @@ struct AddTransactionView: View {
   @FocusState private var focusedField: Field?
 
   @Environment(\.dismiss) private var dismiss
+
+  init(viewModel: AddTransactionViewModel, transaction: Transaction? = nil) {
+    self.viewModel = viewModel
+    self._transaction = State(initialValue: transaction ?? Transaction(amount: "", memo: "", date: Date(), account: "", category: "", transactionType: .outflow, approvalType: .pending, payee: "", rowNum: nil))
+    self._selectedPayee = State(initialValue: transaction?.payee ?? "")
+  }
 
   var filteredPayees: [String] {
     let payees = viewModel.dataProvider?.payees ?? []
@@ -57,12 +57,12 @@ struct AddTransactionView: View {
 
   var body: some View {
     Form {
-      Picker("Transaction type", selection: $transactionType) {
+      Picker("Transaction type", selection: $transaction.transactionType) {
         Text("Inflow").tag(TransactionType.inflow)
         Text("Outflow").tag(TransactionType.outflow)
       }
       .pickerStyle(.segmented)
-      .onChange(of: transactionType) { newVal in
+      .onChange(of: transaction.transactionType) { newVal in
         DispatchQueue.main.async {
           focusedField = nil
           switch newVal {
@@ -76,7 +76,11 @@ struct AddTransactionView: View {
 
       CurrencyTextField(
         "Amount",
-        value: $amount,
+        value: Binding(get: {
+          return transaction.amount.isEmpty ? nil : Double(transaction.amount)
+        }, set: { newVal in
+          transaction.amount = newVal == nil ? "" : String(newVal!)
+        }),
         foregroundColor: $amountColor,
         textAlignment: .center
       )
@@ -94,13 +98,14 @@ struct AddTransactionView: View {
           .onChange(of: selectedPayee) { _ in
             DispatchQueue.main.async {
               focusedField = nil
+              transaction.payee = selectedPayee
 
               // autofill recent category and account if they're empty
-              if selectedCategory.isEmpty, let recentCategory = PayeeStorage.recentCategory(for: selectedPayee) {
-                selectedCategory = recentCategory
+              if transaction.category.isEmpty, let recentCategory = PayeeStorage.recentCategory(for: selectedPayee) {
+                transaction.category = recentCategory
               }
-              if selectedAccount.isEmpty, let recentAccount = PayeeStorage.recentAccount(for: selectedPayee) {
-                selectedAccount = recentAccount
+              if transaction.account.isEmpty, let recentAccount = PayeeStorage.recentAccount(for: selectedPayee) {
+                transaction.account = recentAccount
               }
             }
           }
@@ -109,65 +114,63 @@ struct AddTransactionView: View {
         if selectedPayee.isEmpty {
           TextField("New Payee", text: $customPayee)
             .focused($focusedField, equals: .customPayee)
+            .onChange(of: customPayee) { newValue in
+              DispatchQueue.main.async {
+                transaction.payee = newValue
+              }
+            }
         }
 
-        Picker("Category", selection: $selectedCategory) {
+        Picker("Category", selection: $transaction.category) {
           ForEach(sortedCategories, id: \.self) {
             Text($0)
           }
         }
-        .onChange(of: selectedCategory) { _ in
+        .onChange(of: transaction.category) { _ in
           DispatchQueue.main.async {
             focusedField = nil
           }
         }
 
-        Picker("Account", selection: $selectedAccount) {
+        Picker("Account", selection: $transaction.account) {
           ForEach(sortedAccounts, id: \.self) {
             Text($0)
           }
         }
-        .onChange(of: selectedAccount) { _ in
+        .onChange(of: transaction.account) { _ in
           DispatchQueue.main.async {
             focusedField = nil
           }
         }
       }
 
-      DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
+      DatePicker("Date", selection: $transaction.date, displayedComponents: .date)
 
       Section {
-        Toggle(isOn: $pending) {
+        Toggle(isOn: Binding(get: {
+          transaction.approvalType == .pending
+        }, set: { newVal in
+          transaction.approvalType = newVal ? .pending : .approved
+        })) {
           Text("Pending")
         }
-        .onChange(of: pending) { _ in
+        .onChange(of: transaction.approvalType) { _ in
           DispatchQueue.main.async {
             focusedField = nil
           }
         }
 
-        TextField("Memo", text: $memoString)
+        TextField("Memo", text: $transaction.memo)
           .focused($focusedField, equals: .memo)
       }
 
       Section {
         Button("Add Transaction") {
           submittingInProgress = true
-          let payee = selectedPayee.isEmpty ? customPayee : selectedPayee
 
-          PayeeStorage.set(recentCategory: selectedCategory, for: payee)
-          PayeeStorage.set(recentAccount: selectedAccount, for: payee)
+          PayeeStorage.set(recentCategory: transaction.category, for: transaction.payee)
+          PayeeStorage.set(recentAccount: transaction.account, for: transaction.payee)
 
-          let transaction = Transaction(
-            amount: String(amount!),
-            memo: memoString,
-            date: selectedDate,
-            account: selectedAccount,
-            category: selectedCategory,
-            transactionType: transactionType,
-            approvalType: pending ? .pending : .approved,
-            payee: payee
-          )
           viewModel.dataProvider?.submit(transaction) { result in
             switch result {
             case .success:
@@ -179,7 +182,7 @@ struct AddTransactionView: View {
             submittingInProgress = false
           }
         }
-        .disabled(submittingInProgress || amount == nil || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
+        .disabled(submittingInProgress || transaction.invalid)
         .alert(alertText, isPresented: $showAlert, actions: {
           Button("OK") {
             dismiss()

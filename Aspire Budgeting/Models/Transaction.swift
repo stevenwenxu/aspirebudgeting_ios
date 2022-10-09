@@ -40,15 +40,20 @@ enum TransactionType {
   case outflow
 }
 
-struct Transaction: Hashable {
-  let amount: String
-  let memo: String
-  let date: Date
-  let account: String
-  let category: String
-  let transactionType: TransactionType
-  let approvalType: ApprovalType
-  let payee: String
+struct Transaction: Hashable, Identifiable {
+  var amount: String
+  var memo: String
+  var date: Date
+  var account: String
+  var category: String
+  var transactionType: TransactionType
+  var approvalType: ApprovalType
+  var payee: String
+  let rowNum: Int?
+
+  var id: String {
+    rowNum.flatMap(String.init) ?? UUID().uuidString
+  }
 }
 
 extension Transaction {
@@ -90,6 +95,10 @@ extension Transaction {
     ]
   }
 
+  var invalid: Bool {
+    return amount.isEmpty || category.isEmpty || account.isEmpty || payee.isEmpty
+  }
+
   func contains(_ text: String) -> Bool {
     self.amount.caseInsensitiveCompare(text) ||
       self.memo.lowercased().contains(text.lowercased()) ||
@@ -106,7 +115,7 @@ struct Transactions: ConstructableFromRows {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "MM/dd/yyyy"
 
-    transactions = rows.filter { $0.count == 8 }.compactMap { row in
+    transactions = rows.enumerated().filter { $1.count == 8 }.compactMap { index, row in
       let date = dateFormatter.date(from: row[0]) ?? Date()
       let account = row[1]
       let payee = row[2]
@@ -125,7 +134,8 @@ struct Transactions: ConstructableFromRows {
                          category: category,
                          transactionType: transactionType,
                          approvalType: approvalType,
-                         payee: payee
+                         payee: payee,
+                         rowNum: index + 9
       )
     }
   }

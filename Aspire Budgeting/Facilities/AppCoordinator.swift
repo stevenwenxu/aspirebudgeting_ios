@@ -28,6 +28,9 @@ final class AppCoordinator: ObservableObject {
   private(set) lazy var addTransactionVM: AddTransactionViewModel = {
     AddTransactionViewModel(refreshAction: self.addTransactionRefreshCallback)
   }()
+  private(set) lazy var editTransactionVM: AddTransactionViewModel = {
+    AddTransactionViewModel(refreshAction: self.addTransactionRefreshCallback)
+  }()
 
   @Published private(set) var user: User?
   @Published private(set) var selectedSheet: AspireSheet?
@@ -183,6 +186,30 @@ extension AppCoordinator {
       }
   }
 
+  func editTransactionRefreshCallback() {
+    self.contentProvider
+      .getBatchData(
+        for: self.user!,
+        from: self.selectedSheet!.file,
+        using: self.selectedSheet!.dataMap) { (readResult: Result<AddTransactionMetadata>) in
+
+        let result: Result<AddTrxDataProvider>
+
+        switch readResult {
+        case .success(let metadata):
+          result = .success(AddTrxDataProvider(metadata: metadata, submitAction: self.edit))
+
+        case .failure(let error):
+          result = .failure(error)
+        }
+
+        self.editTransactionVM =
+          AddTransactionViewModel(result: result,
+                                  refreshAction: self.editTransactionRefreshCallback)
+        self.objectWillChange.send()
+      }
+  }
+
   func submit(transaction: Transaction, resultHandler: @escaping SubmitResultHandler) {
     scriptManager.addTransaction(for: user!, transaction: transaction) { result in
       switch result {
@@ -192,6 +219,17 @@ extension AppCoordinator {
         resultHandler(.failure(error))
       }
     }
+  }
+
+  func edit(transaction: Transaction, resultHandler: @escaping SubmitResultHandler) {
+//    scriptManager.editTransaction(for: user!, transaction: transaction) { result in
+//      switch result {
+//      case .success:
+//        resultHandler(.success(()))
+//      case .failure(let error):
+//        resultHandler(.failure(error))
+//      }
+//    }
   }
 
   func changeSheet() {

@@ -8,8 +8,10 @@ import SwiftUI
 struct TransactionsView: View {
 
   @ObservedObject var viewModel: TransactionsViewModel
+  let editTransactionViewModel: AddTransactionViewModel
   @State private var searchText = ""
   @State private(set) var showingAlert = false
+  @State private var selectedTransaction: Transaction?
 
   var body: some View {
     VStack {
@@ -25,6 +27,7 @@ struct TransactionsView: View {
               ForEach(transactionsByDate[date]!, id: \.self) { transaction in
                 HStack {
                   arrowFor(type: transaction.transactionType)
+//                  Text("\(transaction.rowNum!)")
                   VStack(alignment: .leading, spacing: 2) {
                     Text(transaction.payee)
                       .font(.nunitoBold(size: 16))
@@ -46,6 +49,9 @@ struct TransactionsView: View {
                     }
                   }
                 }
+                .onTapGesture {
+                  selectedTransaction = transaction
+                }
               }
             } header: { Text(viewModel.formattedDate(for: date)) }
           }
@@ -54,6 +60,9 @@ struct TransactionsView: View {
         .searchable(text: $searchText)
         .refreshable {
           viewModel.refresh()
+        }
+        .sheet(item: $selectedTransaction) { transaction in
+          AddTransactionView(viewModel: editTransactionViewModel, transaction: transaction)
         }
       }
     }

@@ -51,7 +51,7 @@ struct AspireMasterView: View {
           .tag(2)
           .navigationViewStyle(.stack)
 
-        NavigationView { TransactionsView(viewModel: appCoordinator.transactionsVM) }
+        NavigationView { TransactionsView(viewModel: appCoordinator.transactionsVM, editTransactionViewModel: appCoordinator.editTransactionVM) }
           .tabItem {
             Label("Transactions", systemImage: "arrow.up.arrow.down")
           }
