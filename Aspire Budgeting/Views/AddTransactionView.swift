@@ -15,7 +15,7 @@ struct AddTransactionView: View {
   let viewModel: AddTransactionViewModel
 
   @State private var amount: Double?
-  @State private var amountColor: UIColor = .red
+  @State private var amountColor: Color = .expenseRed
 
   @State private var memoString = ""
 
@@ -67,9 +67,9 @@ struct AddTransactionView: View {
           focusedField = nil
           switch newVal {
           case .inflow:
-            amountColor = .green
+            amountColor = .expenseGreen
           case .outflow:
-            amountColor = .red
+            amountColor = .expenseRed
           }
         }
       }

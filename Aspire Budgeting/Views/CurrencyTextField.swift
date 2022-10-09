@@ -21,7 +21,7 @@ public struct CurrencyTextField: UIViewRepresentable {
     private var placeholder: String
 
     private var font: UIFont?
-    @Binding private var foregroundColor: UIColor
+    @Binding private var foregroundColor: Color
     private var accentColor: UIColor?
     private var textAlignment: NSTextAlignment?
     private var contentType: UITextContentType?
@@ -50,7 +50,7 @@ public struct CurrencyTextField: UIViewRepresentable {
         numberOfDecimalPlaces: Int = 2,
         currencySymbol: String? = nil,
         font: UIFont? = nil,
-        foregroundColor: Binding<UIColor>? = nil,
+        foregroundColor: Binding<Color>? = nil,
         accentColor: UIColor? = nil,
         textAlignment: NSTextAlignment? = nil,
         contentType: UITextContentType? = nil,
@@ -73,7 +73,7 @@ public struct CurrencyTextField: UIViewRepresentable {
         self.currencySymbol = currencySymbol
 
         self.font = font
-        self._foregroundColor = foregroundColor ?? Binding.constant(.label)
+        self._foregroundColor = foregroundColor ?? Binding.constant(Color(.label))
         self.accentColor = accentColor
         self.textAlignment = textAlignment
         self.contentType = contentType
@@ -149,7 +149,7 @@ public struct CurrencyTextField: UIViewRepresentable {
         }
 
         // color
-        textField.textColor = foregroundColor
+        textField.textColor = UIColor(foregroundColor)
 
         // other
         textField.placeholder = placeholder
@@ -188,7 +188,7 @@ public struct CurrencyTextField: UIViewRepresentable {
             }
         }
 
-        textField.textColor = foregroundColor
+        textField.textColor = UIColor(foregroundColor)
 
         // set first responder ONCE
         // other times, let textfield handle it
