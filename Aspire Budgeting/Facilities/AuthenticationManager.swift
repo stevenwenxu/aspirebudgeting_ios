@@ -15,6 +15,10 @@ final class AuthenticationManager: ObservableObject {
   var isLoggedOut: Bool {
     user == nil
   }
+  
+  lazy var authViewModel: AuthenticationViewModel = {
+    AuthenticationViewModel(userManager: userManager)
+  }()
 
   init(userManager: UserManager) {
     self.userManager = userManager
@@ -28,6 +32,6 @@ final class AuthenticationManager: ObservableObject {
       }
       .store(in: &cancellables)
 
-    userManager.authenticate()
+    userManager.restoreLogin()
   }
 }

@@ -10,13 +10,8 @@ import GoogleSignIn
 import GTMSessionFetcher
 
 protocol IGIDSignIn: AnyObject {
-  var clientID: String! { get set }
-  var delegate: GIDSignInDelegate! { get set }
-  var presentingViewController: UIViewController! { get set }
-  var scopes: [Any]! { get set }
-  func restorePreviousSignIn()
+  func restorePreviousSignIn(callback: GIDSignInCallback?)
   func signOut()
-  func signIn()
 }
 
 extension GIDSignIn: IGIDSignIn {}
@@ -39,10 +34,11 @@ enum UserManagerState {
 
 protocol UserManager {
   var userPublisher: AnyPublisher<User?, Never> { get }
-  func authenticate()
+  func restoreLogin()
+  func manualLogin()
 }
 
-final class GoogleUserManager: NSObject, GIDSignInDelegate, UserManager {
+final class GoogleUserManager: NSObject, UserManager {
   private let gidSignInInstance: IGIDSignIn
   private let credentials: GoogleSDKCredentials
 
@@ -52,42 +48,43 @@ final class GoogleUserManager: NSObject, GIDSignInDelegate, UserManager {
       .eraseToAnyPublisher()
   }
 
+  private var presentingViewController: UIViewController! {
+    (UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate).window!.rootViewController
+  }
+
   init(
     credentials: GoogleSDKCredentials,
-    gidSignInInstance: IGIDSignIn = GIDSignIn.sharedInstance()
+    gidSignInInstance: IGIDSignIn = GIDSignIn.sharedInstance
   ) {
     self.credentials = credentials
     self.gidSignInInstance = gidSignInInstance
   }
 
-  func authenticate() {
-    Logger.info(
-      "Attempting to authenticate with Google"
-    )
-    fetchUser()
-  }
-
-  private func fetchUser() {
+  func restoreLogin() {
     Logger.info(
       "Attempting to restore previous Google SignIn"
     )
-    gidSignInInstance.clientID = credentials.CLIENT_ID
-    gidSignInInstance.delegate = self
-    gidSignInInstance.scopes = [kGTLRAuthScopeDrive, kGTLRAuthScopeSheetsDrive, kGTLRAuthScopeSheetsSpreadsheets]
-    gidSignInInstance.restorePreviousSignIn()
+    gidSignInInstance.restorePreviousSignIn { [weak self] user, error in
+      self?.didSignIn(user: user, error: error)
+    }
   }
-
-  func sign(
-    _ signIn: GIDSignIn!,
-    didSignInFor user: GIDGoogleUser!,
-    withError error: Error!
-  ) {
+  
+  func manualLogin() {
+    GIDSignIn.sharedInstance.signIn(
+      with: GIDConfiguration(clientID: credentials.CLIENT_ID),
+      presenting: presentingViewController,
+      hint: nil,
+      additionalScopes: [kGTLRAuthScopeDrive, kGTLRAuthScopeSheetsDrive, kGTLRAuthScopeSheetsSpreadsheets]
+    ) { [weak self] user, error in
+      self?.didSignIn(user: user, error: error)
+    }
+  }
+  
+  private func didSignIn(user: GIDGoogleUser?, error: Error?) {
     if let error = error {
-      if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
+      if (error as NSError).code == GIDSignInError.Code.hasNoAuthInKeychain.rawValue {
         Logger.info(
-          // swiftlint:disable line_length
           "The user has not signed in before or has since signed out. Proceed with normal sign in flow."
-          // swiftlint:enable line_length
         )
       } else {
         Logger.error(
@@ -95,23 +92,16 @@ final class GoogleUserManager: NSObject, GIDSignInDelegate, UserManager {
           context: error.localizedDescription
         )
       }
-      return
+    } else if let gUser = user {
+      Logger.info(
+        "User authenticated with Google successfully."
+      )
+
+      userSubject.send(User(
+        name: gUser.profile?.name ?? "Unknown user",
+        authorizer: gUser.authentication.fetcherAuthorizer()
+      ))
     }
-
-    self.signIn(user: user)
-  }
-
-  private func signIn(user gUser: GIDGoogleUser) {
-    Logger.info(
-      "User authenticated with Google successfully."
-    )
-
-    let user = User(
-      name: gUser.profile.name,
-      authorizer: gUser.authentication.fetcherAuthorizer()
-    )
-
-    userSubject.send(user)
   }
 
   func signOut() {

@@ -5,6 +5,7 @@
 
 import SwiftyBeaver
 import UIKit
+import GoogleSignIn
 
 let Logger = SwiftyBeaver.self
 var logURL: URL {
@@ -36,6 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     setupLogger()
     return true
+  }
+    
+  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    return GIDSignIn.sharedInstance.handle(url)
   }
 
   // MARK: UISceneSession Lifecycle

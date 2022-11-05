@@ -26,7 +26,7 @@ struct ContentView: View {
   var body: some View {
     VStack {
       if isLoggedOut {
-        SignInView()
+        SignInView(authViewModel: authenticationManager.authViewModel)
           .frame(maxHeight: .infinity)
       } else if needsLocalAuth {
         FaceIDView()

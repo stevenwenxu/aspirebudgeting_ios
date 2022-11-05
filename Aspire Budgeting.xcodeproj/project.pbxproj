@@ -33,7 +33,6 @@
 		066C3F31244E4732003CDE73 /* Nunito-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 066C3F30244E4732003CDE73 /* Nunito-SemiBold.ttf */; };
 		066C3F33244E67CD003CDE73 /* AspirePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066C3F32244E67CD003CDE73 /* AspirePickerButton.swift */; };
 		066C3F352453560E003CDE73 /* AspireRadioControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066C3F342453560D003CDE73 /* AspireRadioControl.swift */; };
-		066EF459235CE07C00E94CE4 /* GoogleSignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066EF458235CE07C00E94CE4 /* GoogleSignInButton.swift */; };
 		066EF45B235CF2C900E94CE4 /* BackgroundSplitColorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066EF45A235CF2C900E94CE4 /* BackgroundSplitColorView.swift */; };
 		066EF45E235CF74500E94CE4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066EF45D235CF74500E94CE4 /* User.swift */; };
 		066EF460235D3D6000E94CE4 /* GoogleUserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066EF45F235D3D6000E94CE4 /* GoogleUserManager.swift */; };
@@ -120,6 +119,7 @@
 		B089078C28EBD06F00BBB002 /* GoogleScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078B28EBD06F00BBB002 /* GoogleScriptManager.swift */; };
 		B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078D28EE77F300BBB002 /* CurrencyTextField.swift */; };
 		B089079028EFC45D00BBB002 /* PayeeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078F28EFC45D00BBB002 /* PayeeStorage.swift */; };
+		D5BEC3E82916BDC80023E480 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,7 +160,6 @@
 		066C3F30244E4732003CDE73 /* Nunito-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Nunito-SemiBold.ttf"; sourceTree = "<group>"; };
 		066C3F32244E67CD003CDE73 /* AspirePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspirePickerButton.swift; sourceTree = "<group>"; };
 		066C3F342453560D003CDE73 /* AspireRadioControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspireRadioControl.swift; sourceTree = "<group>"; };
-		066EF458235CE07C00E94CE4 /* GoogleSignInButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInButton.swift; sourceTree = "<group>"; };
 		066EF45A235CF2C900E94CE4 /* BackgroundSplitColorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSplitColorView.swift; sourceTree = "<group>"; };
 		066EF45D235CF74500E94CE4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		066EF45F235D3D6000E94CE4 /* GoogleUserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleUserManager.swift; sourceTree = "<group>"; };
@@ -254,6 +253,7 @@
 		B089078D28EE77F300BBB002 /* CurrencyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTextField.swift; sourceTree = "<group>"; };
 		B089078F28EFC45D00BBB002 /* PayeeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeStorage.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
+		D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -293,7 +293,6 @@
 			children = (
 				0685BBB5250EC73A00728228 /* CardView */,
 				060CDA6B238F75F6005CD74B /* Dashboard */,
-				066EF458235CE07C00E94CE4 /* GoogleSignInButton.swift */,
 				06C2BFFB2500A151007B3D73 /* ProminentTabBarItemView.swift */,
 				066EF45A235CF2C900E94CE4 /* BackgroundSplitColorView.swift */,
 				066EF461235D4FBD00E94CE4 /* SignInView.swift */,
@@ -430,6 +429,7 @@
 				065D90A225CF82ED00185786 /* TransactionsViewModel.swift */,
 				06BC51BD264F4A6500E4BC8B /* SettingsViewModel.swift */,
 				3E43670226D9C00F001421A8 /* CategoryTransferViewModel.swift */,
+				D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -538,7 +538,6 @@
 				06ED8A5C235A908E009BA6A7 /* Frameworks */,
 				06ED8A5D235A908E009BA6A7 /* Resources */,
 				AED55A22A1B77F3741A38403 /* [CP] Embed Pods Frameworks */,
-				6CBB4FCC30CC67673AFBA684 /* [CP] Copy Pods Resources */,
 				06C5C6A62368FFF900862196 /* Swift Lint */,
 			);
 			buildRules = (
@@ -705,23 +704,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6CBB4FCC30CC67673AFBA684 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		AED55A22A1B77F3741A38403 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -812,7 +794,6 @@
 				06A96052235FD2A60058EE64 /* ObjectFactory.swift in Sources */,
 				06D4528F25166C4D00BFEE02 /* CategoryDetailsView.swift in Sources */,
 				06ED8A65235A908E009BA6A7 /* SceneDelegate.swift in Sources */,
-				066EF459235CE07C00E94CE4 /* GoogleSignInButton.swift in Sources */,
 				06F9A8D524391357005E5A13 /* AccountBalancesView.swift in Sources */,
 				065C718023838E9100DB46B2 /* Colors.swift in Sources */,
 				3E43670B26DA0477001421A8 /* CategoryTransfer.swift in Sources */,
@@ -829,6 +810,7 @@
 				06ED8A67235A908E009BA6A7 /* ContentView.swift in Sources */,
 				06C2C0012500A19F007B3D73 /* MockProvider.swift in Sources */,
 				065D90A325CF82ED00185786 /* TransactionsViewModel.swift in Sources */,
+				D5BEC3E82916BDC80023E480 /* AuthenticationViewModel.swift in Sources */,
 				06EA080A24F4637700927FE5 /* FileValidator.swift in Sources */,
 				061F103823776D1700089D11 /* StateManager.swift in Sources */,
 				06A227B223EF768200B5BAF0 /* AspireVersionInfo.swift in Sources */,

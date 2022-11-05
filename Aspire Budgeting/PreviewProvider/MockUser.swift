@@ -8,13 +8,13 @@ import GoogleSignIn
 import GTMSessionFetcher
 
 final class MockProfile: GIDProfileData {
-  override var name: String! {
+  override var name: String {
     "First Last"
   }
 }
 
 final class MockAuthentication: GIDAuthentication {
-  override func fetcherAuthorizer() -> GTMFetcherAuthorizationProtocol! {
+  override func fetcherAuthorizer() -> GTMFetcherAuthorizationProtocol {
     MockAuthorizer()
   }
 }
@@ -24,7 +24,7 @@ final class MockUser: GIDGoogleUser {
     MockProfile()
   }
 
-  override var authentication: GIDAuthentication! {
+  override var authentication: GIDAuthentication {
     MockAuthentication()
   }
 }

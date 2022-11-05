@@ -4,10 +4,13 @@
 //
 
 import SwiftUI
+import GoogleSignInSwift
 
 struct SignInView: View {
   @Environment (\.colorScheme) var colorScheme: ColorScheme
 
+  @ObservedObject var authViewModel: AuthenticationViewModel
+  
   var body: some View {
     VStack {
       Text("Aspire Budgeting")
@@ -31,8 +34,12 @@ struct SignInView: View {
 
       Image.diamondSeparator
         .padding()
-
-      GoogleSignInButton(colorScheme: colorScheme)
+      
+      GoogleSignInButton(
+        scheme: colorScheme == .light ? .light : .dark,
+        style: .wide,
+        action: authViewModel.signIn
+      )
         .frame(height: 50)
         .padding()
 
@@ -41,11 +48,11 @@ struct SignInView: View {
   }
 }
 
-struct SignInView_Previews: PreviewProvider {
-  static var previews: some View {
-    Group {
-      SignInView()
-      SignInView().environment(\.colorScheme, .dark)
-    }
-  }
-}
+//struct SignInView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    Group {
+//      SignInView()
+//      SignInView().environment(\.colorScheme, .dark)
+//    }
+//  }
+//}
