@@ -1019,7 +1019,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Aspire Budgeting/Preview Content\"";
-				DEVELOPMENT_TEAM = MC5YP64TPD;
+				DEVELOPMENT_TEAM = 6ZYNJZSY2C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Aspire Budgeting/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
@@ -1061,7 +1061,7 @@
 					"\"AuthenticationServices\"",
 					"-fprofile-instr-generate",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.sxu.AspireBudgeting;
+				PRODUCT_BUNDLE_IDENTIFIER = steven.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1076,7 +1076,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Aspire Budgeting/Preview Content\"";
-				DEVELOPMENT_TEAM = MC5YP64TPD;
+				DEVELOPMENT_TEAM = 6ZYNJZSY2C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Aspire Budgeting/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
@@ -1118,7 +1118,7 @@
 					"\"AuthenticationServices\"",
 					"-fprofile-instr-generate",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.sxu.AspireBudgeting;
+				PRODUCT_BUNDLE_IDENTIFIER = steven.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
