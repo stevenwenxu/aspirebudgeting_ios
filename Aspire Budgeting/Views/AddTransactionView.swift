@@ -18,7 +18,6 @@ struct AddTransactionView: View {
   @State private var selectedCategory: String?
   @State private var selectedAccount: String?
   @State private var selectedPayee: String?
-  @State private var customPayee = ""
 
   @State private var transactionType = TransactionType.outflow
   @State private var pending = true
@@ -30,12 +29,6 @@ struct AddTransactionView: View {
   @State private var payeeSearchText = ""
 
   @Environment(\.dismiss) private var dismiss
-
-  var filteredPayees: [String] {
-    let payees = viewModel.dataProvider?.payees ?? []
-    let searchTerm = payeeSearchText.lowercased()
-    return searchTerm.isEmpty ? payees : payees.filter { $0.lowercased().contains(searchTerm) }
-  }
 
   var sortedCategories: [String] {
     let unsorted = viewModel.dataProvider?.transactionCategories ?? []
@@ -77,36 +70,38 @@ struct AddTransactionView: View {
         }
 
         Section {
-          if customPayee.isEmpty {
-            NavigationLink {
-              List(filteredPayees, id: \.self, selection: $selectedPayee) {
-                Text($0)
-              }
-              .searchable(text: $payeeSearchText, placement: .navigationBarDrawer(displayMode: .always))
-            } label: {
-              HStack {
-                Text("Select payee")
-                if let payee = selectedPayee {
-                  Spacer()
-                  Text(payee)
-                }
-              }
-            }
-            .onChange(of: selectedPayee) { _ in
-              DispatchQueue.main.async {
-                // autofill recent category and account if they're empty
-                if selectedCategory == nil, let payee = selectedPayee, let recentCategory = PayeeStorage.recentCategory(for: payee) {
-                  selectedCategory = recentCategory
-                }
-                if selectedAccount == nil, let payee = selectedPayee, let recentAccount = PayeeStorage.recentAccount(for: payee) {
-                  selectedAccount = recentAccount
-                }
+          NavigationLink {
+            PayeeSelectionView(
+              payees: viewModel.dataProvider?.payees ?? [],
+              searchText: $payeeSearchText,
+              selectedPayee: $selectedPayee
+            )
+            .searchable(text: $payeeSearchText, placement: .navigationBarDrawer(displayMode: .always))
+          } label: {
+            HStack {
+              Text("Payee")
+              if let payee = selectedPayee {
+                Spacer()
+                Text(payee)
               }
             }
           }
-
-          if selectedPayee == nil {
-            TextField("New Payee", text: $customPayee)
+          .swipeActions(edge: .trailing) {
+            Button("Clear") {
+              selectedPayee = nil
+            }
+            .tint(.red)
+          }
+          .onChange(of: selectedPayee) { _ in
+            DispatchQueue.main.async {
+              // autofill recent category and account if they're empty
+              if selectedCategory == nil, let payee = selectedPayee, let recentCategory = PayeeStorage.recentCategory(for: payee) {
+                selectedCategory = recentCategory
+              }
+              if selectedAccount == nil, let payee = selectedPayee, let recentAccount = PayeeStorage.recentAccount(for: payee) {
+                selectedAccount = recentAccount
+              }
+            }
           }
 
           NavigationLink {
@@ -150,18 +145,24 @@ struct AddTransactionView: View {
 
         Section {
           Button("Add Transaction") {
+            guard
+              let amount = amount,
+              let payee = selectedPayee,
+              let category = selectedCategory,
+              let account = selectedAccount
+            else { return }
+            
             submittingInProgress = true
-            let payee = selectedPayee ?? customPayee
 
-            PayeeStorage.set(recentCategory: selectedCategory!, for: payee)
-            PayeeStorage.set(recentAccount: selectedAccount!, for: payee)
+            PayeeStorage.set(recentCategory: category, for: payee)
+            PayeeStorage.set(recentAccount: account, for: payee)
 
             let transaction = Transaction(
-              amount: String(amount!),
+              amount: String(amount),
               memo: memoString,
               date: selectedDate,
-              account: selectedAccount!,
-              category: selectedCategory!,
+              account: account,
+              category: category,
               transactionType: transactionType,
               approvalType: pending ? .pending : .approved,
               payee: payee
@@ -177,7 +178,7 @@ struct AddTransactionView: View {
               submittingInProgress = false
             }
           }
-          .disabled(submittingInProgress || amount == nil || selectedCategory == nil || selectedAccount == nil || (selectedPayee == nil && customPayee.isEmpty))
+          .disabled(submittingInProgress || amount == nil || selectedCategory == nil || selectedAccount == nil || selectedPayee == nil)
           .alert(alertText, isPresented: $showAlert, actions: {
             Button("OK") {
               dismiss()

@@ -120,6 +120,7 @@
 		B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078D28EE77F300BBB002 /* CurrencyTextField.swift */; };
 		B089079028EFC45D00BBB002 /* PayeeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078F28EFC45D00BBB002 /* PayeeStorage.swift */; };
 		D5BEC3E82916BDC80023E480 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */; };
+		D5BEC3EA2916F5B30023E480 /* PayeeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -254,6 +255,7 @@
 		B089078F28EFC45D00BBB002 /* PayeeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeStorage.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 		D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
+		D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeSelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,6 +325,7 @@
 				3EDC12D0267564AE006A133D /* ShareSheet.swift */,
 				3E43670826D9C647001421A8 /* CategoryTransferView.swift */,
 				B089078D28EE77F300BBB002 /* CurrencyTextField.swift */,
+				D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -773,6 +776,7 @@
 				061EEF3223A1F7D300A684EB /* AspireTextField.swift in Sources */,
 				06F9A8D7243917EF005E5A13 /* AccountBalances.swift in Sources */,
 				06002500236F9A8000A20C96 /* Dashboard.swift in Sources */,
+				D5BEC3EA2916F5B30023E480 /* PayeeSelectionView.swift in Sources */,
 				B089078428E7E54500BBB002 /* CategoryView.swift in Sources */,
 				061F103A2377801600089D11 /* FaceIDView.swift in Sources */,
 				06B0A21825A3BEA800E8DFBB /* AddTransactionMetadata.swift in Sources */,
