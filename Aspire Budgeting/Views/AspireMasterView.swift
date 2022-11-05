@@ -14,7 +14,7 @@ struct AspireMasterView: View {
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
       TabView(selection: $currentSelection) {
-        NavigationView {
+        NavigationStack {
           DashboardView(viewModel: appCoordinator.dashboardVM)
             .toolbar {
               ToolbarItem(placement: .navigation) {
@@ -30,7 +30,6 @@ struct AspireMasterView: View {
           Label("Dashboard", systemImage: "rectangle.grid.1x2")
         }
         .tag(1)
-        .navigationViewStyle(.stack)
         .sheet(isPresented: $showCategoryTransfer, content: {
           NavigationView {
             CategoryTransferView(viewModel: appCoordinator.categoryTransferViewModel)
@@ -44,19 +43,17 @@ struct AspireMasterView: View {
           }
         })
 
-        NavigationView { AccountBalancesView(viewModel: appCoordinator.accountBalancesVM) }
+        NavigationStack { AccountBalancesView(viewModel: appCoordinator.accountBalancesVM) }
           .tabItem {
             Label("Accounts", systemImage: "creditcard")
           }
           .tag(2)
-          .navigationViewStyle(.stack)
 
-        NavigationView { TransactionsView(viewModel: appCoordinator.transactionsVM) }
+        NavigationStack { TransactionsView(viewModel: appCoordinator.transactionsVM) }
           .tabItem {
             Label("Transactions", systemImage: "arrow.up.arrow.down")
           }
           .tag(3)
-          .navigationViewStyle(.stack)
 
         SettingsView(viewModel: appCoordinator.settingsVM)
           .tabItem {
@@ -73,23 +70,8 @@ struct AspireMasterView: View {
     .sheet(
       isPresented: $showAddTransactions,
       content: {
-        NavigationView {
-          AddTransactionView(viewModel: self.appCoordinator.addTransactionVM)
-            .toolbar {
-              ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", role: .cancel) {
-                  showAddTransactions = false
-                }
-              }
-            }
-        }
+        AddTransactionView(viewModel: self.appCoordinator.addTransactionVM)
       }
     )
-  }
-}
-
-struct AspireMasterView_Previews: PreviewProvider {
-  static var previews: some View {
-    AspireMasterView()
   }
 }

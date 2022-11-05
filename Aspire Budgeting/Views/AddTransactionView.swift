@@ -6,12 +6,6 @@
 import SwiftUI
 
 struct AddTransactionView: View {
-  enum Field {
-    case amount
-    case customPayee
-    case memo
-  }
-
   let viewModel: AddTransactionViewModel
 
   @State private var amount: Double?
@@ -21,9 +15,9 @@ struct AddTransactionView: View {
 
   @State private var selectedDate = Date()
 
-  @State private var selectedCategory = ""
-  @State private var selectedAccount = ""
-  @State private var selectedPayee = ""
+  @State private var selectedCategory: String?
+  @State private var selectedAccount: String?
+  @State private var selectedPayee: String?
   @State private var customPayee = ""
 
   @State private var transactionType = TransactionType.outflow
@@ -35,8 +29,6 @@ struct AddTransactionView: View {
 
   @State private var payeeSearchText = ""
 
-  @FocusState private var focusedField: Field?
-
   @Environment(\.dismiss) private var dismiss
 
   var filteredPayees: [String] {
@@ -47,157 +39,184 @@ struct AddTransactionView: View {
 
   var sortedCategories: [String] {
     let unsorted = viewModel.dataProvider?.transactionCategories ?? []
-    return selectedPayee.isEmpty ? unsorted : PayeeStorage.orderedCategories(for: selectedPayee, unorderedCategories: unsorted)
+    return selectedPayee == nil ? unsorted : PayeeStorage.orderedCategories(for: selectedPayee!, unorderedCategories: unsorted)
   }
 
   var sortedAccounts: [String] {
     let unsorted = viewModel.dataProvider?.transactionAccounts ?? []
-    return selectedPayee.isEmpty ? unsorted : PayeeStorage.orderedAccounts(for: selectedPayee, unorderedAccounts: unsorted)
+    return selectedPayee == nil ? unsorted : PayeeStorage.orderedAccounts(for: selectedPayee!, unorderedAccounts: unsorted)
   }
 
   var body: some View {
-    Form {
-      Picker("Transaction type", selection: $transactionType) {
-        Text("Inflow").tag(TransactionType.inflow)
-        Text("Outflow").tag(TransactionType.outflow)
-      }
-      .pickerStyle(.segmented)
-      .onChange(of: transactionType) { newVal in
-        DispatchQueue.main.async {
-          focusedField = nil
-          switch newVal {
-          case .inflow:
-            amountColor = .expenseGreen
-          case .outflow:
-            amountColor = .expenseRed
+    NavigationStack {
+      Form {
+        Section {
+          Picker("Transaction type", selection: $transactionType) {
+            Text("Inflow").tag(TransactionType.inflow)
+            Text("Outflow").tag(TransactionType.outflow)
           }
+          .pickerStyle(.segmented)
+          .onChange(of: transactionType) { newVal in
+            DispatchQueue.main.async {
+              switch newVal {
+              case .inflow:
+                amountColor = .expenseGreen
+              case .outflow:
+                amountColor = .expenseRed
+              }
+            }
+          }
+
+          CurrencyTextField(
+            "Amount",
+            value: $amount,
+            foregroundColor: $amountColor,
+            textAlignment: .center
+          )
+          .font(.title)
         }
-      }
 
-      CurrencyTextField(
-        "Amount",
-        value: $amount,
-        foregroundColor: $amountColor,
-        textAlignment: .center
-      )
-      .font(.title)
-      .focused($focusedField, equals: .amount)
+        Section {
+          if customPayee.isEmpty {
+            NavigationLink {
+              List(filteredPayees, id: \.self, selection: $selectedPayee) {
+                Text($0)
+              }
+              .searchable(text: $payeeSearchText, placement: .navigationBarDrawer(displayMode: .always))
+            } label: {
+              HStack {
+                Text("Select payee")
+                if let payee = selectedPayee {
+                  Spacer()
+                  Text(payee)
+                }
+              }
+            }
+            .onChange(of: selectedPayee) { _ in
+              DispatchQueue.main.async {
+                // autofill recent category and account if they're empty
+                if selectedCategory == nil, let payee = selectedPayee, let recentCategory = PayeeStorage.recentCategory(for: payee) {
+                  selectedCategory = recentCategory
+                }
+                if selectedAccount == nil, let payee = selectedPayee, let recentAccount = PayeeStorage.recentAccount(for: payee) {
+                  selectedAccount = recentAccount
+                }
+              }
+            }
+          }
 
-      Section {
-        if customPayee.isEmpty {
-          Picker("Payee", selection: $selectedPayee) {
-            SearchBar(text: $payeeSearchText)
-            ForEach(filteredPayees, id: \.self) {
+          if selectedPayee == nil {
+            TextField("New Payee", text: $customPayee)
+          }
+
+          NavigationLink {
+            List(sortedCategories, id: \.self, selection: $selectedCategory) {
               Text($0)
             }
-          }
-          .onChange(of: selectedPayee) { _ in
-            DispatchQueue.main.async {
-              focusedField = nil
-
-              // autofill recent category and account if they're empty
-              if selectedCategory.isEmpty, let recentCategory = PayeeStorage.recentCategory(for: selectedPayee) {
-                selectedCategory = recentCategory
+          } label: {
+            HStack {
+              Text("Category")
+              if let category = selectedCategory {
+                Spacer()
+                Text(category)
               }
-              if selectedAccount.isEmpty, let recentAccount = PayeeStorage.recentAccount(for: selectedPayee) {
-                selectedAccount = recentAccount
+            }
+          }
+
+          NavigationLink {
+            List(sortedAccounts, id: \.self, selection: $selectedAccount) {
+              Text($0)
+            }
+          } label: {
+            HStack {
+              Text("Account")
+              if let account = selectedAccount {
+                Spacer()
+                Text(account)
               }
             }
           }
         }
 
-        if selectedPayee.isEmpty {
-          TextField("New Payee", text: $customPayee)
-            .focused($focusedField, equals: .customPayee)
-        }
+        DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
 
-        Picker("Category", selection: $selectedCategory) {
-          ForEach(sortedCategories, id: \.self) {
-            Text($0)
+        Section {
+          Toggle(isOn: $pending) {
+            Text("Pending")
           }
-        }
-        .onChange(of: selectedCategory) { _ in
-          DispatchQueue.main.async {
-            focusedField = nil
-          }
+
+          TextField("Memo", text: $memoString)
         }
 
-        Picker("Account", selection: $selectedAccount) {
-          ForEach(sortedAccounts, id: \.self) {
-            Text($0)
-          }
-        }
-        .onChange(of: selectedAccount) { _ in
-          DispatchQueue.main.async {
-            focusedField = nil
-          }
-        }
-      }
+        Section {
+          Button("Add Transaction") {
+            submittingInProgress = true
+            let payee = selectedPayee ?? customPayee
 
-      DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
+            PayeeStorage.set(recentCategory: selectedCategory!, for: payee)
+            PayeeStorage.set(recentAccount: selectedAccount!, for: payee)
 
-      Section {
-        Toggle(isOn: $pending) {
-          Text("Pending")
-        }
-        .onChange(of: pending) { _ in
-          DispatchQueue.main.async {
-            focusedField = nil
-          }
-        }
-
-        TextField("Memo", text: $memoString)
-          .focused($focusedField, equals: .memo)
-      }
-
-      Section {
-        Button("Add Transaction") {
-          submittingInProgress = true
-          let payee = selectedPayee.isEmpty ? customPayee : selectedPayee
-
-          PayeeStorage.set(recentCategory: selectedCategory, for: payee)
-          PayeeStorage.set(recentAccount: selectedAccount, for: payee)
-
-          let transaction = Transaction(
-            amount: String(amount!),
-            memo: memoString,
-            date: selectedDate,
-            account: selectedAccount,
-            category: selectedCategory,
-            transactionType: transactionType,
-            approvalType: pending ? .pending : .approved,
-            payee: payee
-          )
-          viewModel.dataProvider?.submit(transaction) { result in
-            switch result {
-            case .success:
-              alertText = "Transaction added"
-            case .failure(let error):
-              alertText = error.localizedDescription
+            let transaction = Transaction(
+              amount: String(amount!),
+              memo: memoString,
+              date: selectedDate,
+              account: selectedAccount!,
+              category: selectedCategory!,
+              transactionType: transactionType,
+              approvalType: pending ? .pending : .approved,
+              payee: payee
+            )
+            viewModel.dataProvider?.submit(transaction) { result in
+              switch result {
+              case .success:
+                alertText = "Transaction added"
+              case .failure(let error):
+                alertText = error.localizedDescription
+              }
+              showAlert = true
+              submittingInProgress = false
             }
-            showAlert = true
-            submittingInProgress = false
+          }
+          .disabled(submittingInProgress || amount == nil || selectedCategory == nil || selectedAccount == nil || (selectedPayee == nil && customPayee.isEmpty))
+          .alert(alertText, isPresented: $showAlert, actions: {
+            Button("OK") {
+              dismiss()
+            }
+          })
+
+          if submittingInProgress {
+            ProgressView()
           }
         }
-        .disabled(submittingInProgress || amount == nil || selectedCategory.isEmpty || selectedAccount.isEmpty || (selectedPayee.isEmpty && customPayee.isEmpty))
-        .alert(alertText, isPresented: $showAlert, actions: {
-          Button("OK") {
+      }
+      .interactiveDismissDisabled()
+      .scrollDismissesKeyboard(.interactively)
+      .navigationTitle("Add Transaction")
+      .background(Color.primaryBackgroundColor)
+      .onAppear {
+        if viewModel.dataProvider?.transactionAccounts.isEmpty ?? true {
+          self.viewModel.refresh()
+        }
+      }
+      .toolbar {
+        ToolbarItem(placement: .cancellationAction) {
+          Button("Cancel", role: .cancel) {
             dismiss()
           }
-        })
-
-        if submittingInProgress {
-          ProgressView()
         }
       }
     }
-    .interactiveDismissDisabled()
-    .navigationTitle("Add Transaction")
-    .background(Color.primaryBackgroundColor)
-    .onAppear {
-      if viewModel.dataProvider?.transactionAccounts.isEmpty ?? true {
-        self.viewModel.refresh()
-      }
-    }
+  }
+}
+
+struct AddTransactionView_Previews: PreviewProvider {
+  static var previews: some View {
+    AddTransactionView(viewModel: AddTransactionViewModel(
+      result: .success(AddTrxDataProvider(
+        metadata: MockProvider.addTransactionMetadata,
+        submitAction: { _, _ in }
+      )),
+      refreshAction: {}
+    ))
   }
 }

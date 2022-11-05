@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct TransactionsView: View {
 
@@ -96,8 +97,14 @@ extension TransactionsView {
   }
 }
 
-// struct TransactionsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TransactionsView()
-//    }
-// }
+ struct TransactionsView_Previews: PreviewProvider {
+   static var previews: some View {
+     NavigationStack {
+       TransactionsView(viewModel: TransactionsViewModel(
+        publisher: Just(MockProvider.transactions)
+          .setFailureType(to: Error.self)
+          .eraseToAnyPublisher()
+       ))
+     }
+   }
+ }
