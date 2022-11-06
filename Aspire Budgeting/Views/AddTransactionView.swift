@@ -69,6 +69,7 @@ struct AddTransactionView: View {
             textAlignment: .center
           )
           .font(.title)
+          .padding(.vertical, 4)
         }
 
         Section {
@@ -79,22 +80,22 @@ struct AddTransactionView: View {
             searchText: $payeeSearchText,
             selectedItem: $selectedPayee
           )
-          .onChange(of: selectedPayee) { _ in
+          .onChange(of: selectedPayee) { newVal in
             DispatchQueue.main.async {
               // autofill recent category and account if they're empty
               if selectedCategory == nil,
-                let payee = selectedPayee,
+                let payee = newVal,
                 let recentCategory = PayeeStorage.recentCategory(for: payee) {
                 selectedCategory = recentCategory
               }
               if selectedAccount == nil,
-                let payee = selectedPayee,
+                let payee = newVal,
                 let recentAccount = PayeeStorage.recentAccount(for: payee) {
                 selectedAccount = recentAccount
               }
             }
           }
-         
+
           ItemSelectionLinkView(
             items: sortedCategories,
             itemName: "Category",

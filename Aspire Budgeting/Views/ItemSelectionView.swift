@@ -39,7 +39,10 @@ struct ItemSelectionView: View {
       }
     }
     .onChange(of: selectedItem) { _ in
-      dismiss()
+      // for some reason, dismissing directly will result in an automatic push later
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        dismiss()
+      }
     }
   }
 }
