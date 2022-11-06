@@ -26,29 +26,30 @@ struct TransactionsView: View {
               ForEach(transactionsByDate[date]!, id: \.self) { transaction in
                 HStack {
                   arrowFor(type: transaction.transactionType)
-                  VStack(alignment: .leading, spacing: 2) {
+                  VStack(alignment: .leading, spacing: 4) {
                     Text(transaction.payee)
-                      .font(.nunitoBold(size: 16))
+                      .font(.headline)
                     Text(transaction.account)
-                      .font(.karlaRegular(size: 14))
+                      .font(.subheadline)
                     Text(transaction.category)
-                      .font(.karlaRegular(size: 14))
+                      .font(.subheadline)
                   }
                   Spacer()
-                  VStack(alignment: .trailing) {
+                  VStack(alignment: .trailing, spacing: 4) {
                     Text(transaction.amount)
-                      .font(.nunitoBold(size: 16))
+                      .font(.body)
                       .foregroundColor(
                         transaction.transactionType == .inflow ? .expenseGreen : .expenseRed
                       )
                     if !transaction.memo.isEmpty {
                       Text(transaction.memo)
-                        .font(.karlaRegular(size: 14))
+                        .font(.footnote)
                     }
                   }
                 }
               }
             } header: { Text(viewModel.formattedDate(for: date)) }
+            .listRowBackground(date > Date() ? Color.gray.opacity(0.4) : nil)
           }
         }
         .listStyle(.plain)
@@ -77,22 +78,14 @@ struct TransactionsView: View {
 }
 
 extension TransactionsView {
-  private var arrowDown: some View {
-    Image(systemName: "arrow.down.circle")
-      .foregroundColor(.expenseGreen)
-  }
-
-  private var arrowUp: some View {
-    Image(systemName: "arrow.up.circle")
-      .foregroundColor(.expenseRed)
-  }
-
-  private func arrowFor(type: TransactionType) -> AnyView {
+  private func arrowFor(type: TransactionType) -> some View {
     switch type {
     case .inflow:
-      return AnyView(arrowDown)
+      return Image(systemName: "arrow.down.circle")
+        .foregroundColor(.expenseGreen)
     case .outflow:
-      return AnyView(arrowUp)
+      return Image(systemName: "arrow.up.circle")
+        .foregroundColor(.expenseRed)
     }
   }
 }
