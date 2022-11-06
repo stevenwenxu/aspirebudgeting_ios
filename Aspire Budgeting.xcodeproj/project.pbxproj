@@ -120,7 +120,8 @@
 		B089078E28EE77F400BBB002 /* CurrencyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078D28EE77F300BBB002 /* CurrencyTextField.swift */; };
 		B089079028EFC45D00BBB002 /* PayeeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B089078F28EFC45D00BBB002 /* PayeeStorage.swift */; };
 		D5BEC3E82916BDC80023E480 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */; };
-		D5BEC3EA2916F5B30023E480 /* PayeeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */; };
+		D5BEC3EC29170DCA0023E480 /* ItemSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3EB29170DCA0023E480 /* ItemSelectionView.swift */; };
+		D5BEC3EE29170F8F0023E480 /* ItemSelectionLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BEC3ED29170F8F0023E480 /* ItemSelectionLinkView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -255,7 +256,8 @@
 		B089078F28EFC45D00BBB002 /* PayeeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeStorage.swift; sourceTree = "<group>"; };
 		D0FA6DC926B65B023CE63596 /* Pods-Aspire Budgeting.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Aspire Budgeting.release.xcconfig"; path = "Target Support Files/Pods-Aspire Budgeting/Pods-Aspire Budgeting.release.xcconfig"; sourceTree = "<group>"; };
 		D5BEC3E72916BDC80023E480 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
-		D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayeeSelectionView.swift; sourceTree = "<group>"; };
+		D5BEC3EB29170DCA0023E480 /* ItemSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSelectionView.swift; sourceTree = "<group>"; };
+		D5BEC3ED29170F8F0023E480 /* ItemSelectionLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSelectionLinkView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,7 +327,8 @@
 				3EDC12D0267564AE006A133D /* ShareSheet.swift */,
 				3E43670826D9C647001421A8 /* CategoryTransferView.swift */,
 				B089078D28EE77F300BBB002 /* CurrencyTextField.swift */,
-				D5BEC3E92916F5B30023E480 /* PayeeSelectionView.swift */,
+				D5BEC3EB29170DCA0023E480 /* ItemSelectionView.swift */,
+				D5BEC3ED29170F8F0023E480 /* ItemSelectionLinkView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -776,7 +779,6 @@
 				061EEF3223A1F7D300A684EB /* AspireTextField.swift in Sources */,
 				06F9A8D7243917EF005E5A13 /* AccountBalances.swift in Sources */,
 				06002500236F9A8000A20C96 /* Dashboard.swift in Sources */,
-				D5BEC3EA2916F5B30023E480 /* PayeeSelectionView.swift in Sources */,
 				B089078428E7E54500BBB002 /* CategoryView.swift in Sources */,
 				061F103A2377801600089D11 /* FaceIDView.swift in Sources */,
 				06B0A21825A3BEA800E8DFBB /* AddTransactionMetadata.swift in Sources */,
@@ -785,6 +787,7 @@
 				062F2BBD24EB13C9004830F8 /* AppCoordinator.swift in Sources */,
 				066EF45B235CF2C900E94CE4 /* BackgroundSplitColorView.swift in Sources */,
 				3EDC12D1267564AE006A133D /* ShareSheet.swift in Sources */,
+				D5BEC3EE29170F8F0023E480 /* ItemSelectionLinkView.swift in Sources */,
 				06B0A22225A5390700E8DFBB /* ViewModel.swift in Sources */,
 				0685BBB9250EC76600728228 /* DashboardCardsListView.swift in Sources */,
 				069F830624FFFC76009DD3E9 /* DashboardViewModel.swift in Sources */,
@@ -824,6 +827,7 @@
 				06C6B5A324F2165E00968C60 /* LoadingView.swift in Sources */,
 				068B12A0258EB2A5006B64FE /* BannerView.swift in Sources */,
 				065F03D0236DEF78005AED12 /* ErrorBannerView.swift in Sources */,
+				D5BEC3EC29170DCA0023E480 /* ItemSelectionView.swift in Sources */,
 				06C6B59D24EF259B00968C60 /* FileSelectorViewModel.swift in Sources */,
 				066EF460235D3D6000E94CE4 /* GoogleUserManager.swift in Sources */,
 				069FDF9A23878CD10023E86A /* AspireNumber.swift in Sources */,

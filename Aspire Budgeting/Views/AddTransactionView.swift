@@ -27,6 +27,8 @@ struct AddTransactionView: View {
   @State private var alertText = ""
 
   @State private var payeeSearchText = ""
+  @State private var categorySearchText = ""
+  @State private var accountSearchText = ""
 
   @Environment(\.dismiss) private var dismiss
 
@@ -70,67 +72,44 @@ struct AddTransactionView: View {
         }
 
         Section {
-          NavigationLink {
-            PayeeSelectionView(
-              payees: viewModel.dataProvider?.payees ?? [],
-              searchText: $payeeSearchText,
-              selectedPayee: $selectedPayee
-            )
-            .searchable(text: $payeeSearchText, placement: .navigationBarDrawer(displayMode: .always))
-          } label: {
-            HStack {
-              Text("Payee")
-              if let payee = selectedPayee {
-                Spacer()
-                Text(payee)
-              }
-            }
-          }
-          .swipeActions(edge: .trailing) {
-            Button("Clear") {
-              selectedPayee = nil
-            }
-            .tint(.red)
-          }
+          ItemSelectionLinkView(
+            items: viewModel.dataProvider?.payees ?? [],
+            itemName: "Payee",
+            enableNewItemCreation: true,
+            searchText: $payeeSearchText,
+            selectedItem: $selectedPayee
+          )
           .onChange(of: selectedPayee) { _ in
             DispatchQueue.main.async {
               // autofill recent category and account if they're empty
-              if selectedCategory == nil, let payee = selectedPayee, let recentCategory = PayeeStorage.recentCategory(for: payee) {
+              if selectedCategory == nil,
+                let payee = selectedPayee,
+                let recentCategory = PayeeStorage.recentCategory(for: payee) {
                 selectedCategory = recentCategory
               }
-              if selectedAccount == nil, let payee = selectedPayee, let recentAccount = PayeeStorage.recentAccount(for: payee) {
+              if selectedAccount == nil,
+                let payee = selectedPayee,
+                let recentAccount = PayeeStorage.recentAccount(for: payee) {
                 selectedAccount = recentAccount
               }
             }
           }
-
-          NavigationLink {
-            List(sortedCategories, id: \.self, selection: $selectedCategory) {
-              Text($0)
-            }
-          } label: {
-            HStack {
-              Text("Category")
-              if let category = selectedCategory {
-                Spacer()
-                Text(category)
-              }
-            }
-          }
-
-          NavigationLink {
-            List(sortedAccounts, id: \.self, selection: $selectedAccount) {
-              Text($0)
-            }
-          } label: {
-            HStack {
-              Text("Account")
-              if let account = selectedAccount {
-                Spacer()
-                Text(account)
-              }
-            }
-          }
+         
+          ItemSelectionLinkView(
+            items: sortedCategories,
+            itemName: "Category",
+            enableNewItemCreation: false,
+            searchText: $categorySearchText,
+            selectedItem: $selectedCategory
+          )
+          
+          ItemSelectionLinkView(
+            items: sortedAccounts,
+            itemName: "Account",
+            enableNewItemCreation: false,
+            searchText: $accountSearchText,
+            selectedItem: $selectedAccount
+          )
         }
 
         DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
