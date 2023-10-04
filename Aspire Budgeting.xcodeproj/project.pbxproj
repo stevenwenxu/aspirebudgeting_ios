@@ -584,8 +584,9 @@
 		06ED8A57235A908E009BA6A7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1110;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = "TeraMo Labs";
 				TargetAttributes = {
 					06ED8A5E235A908E009BA6A7 = {
