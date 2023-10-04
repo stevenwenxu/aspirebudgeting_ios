@@ -12,27 +12,19 @@ import XCTest
 @testable import Aspire_Budgeting
 
 final class UserManagerTests: XCTestCase {
-  let mockGoogleCredentials = GoogleSDKCredentials(
-    CLIENT_ID: "dummy_client",
-    REVERSED_CLIENT_ID: "client_dummy"
-  )
-
   let mockGIDSignIn = MockGIDSignIn()
 
   lazy var userManager = GoogleUserManager(
-    credentials: mockGoogleCredentials,
     gidSignInInstance: mockGIDSignIn
   )
 
   var cancellables = Set<AnyCancellable>()
   override func setUp() {
     super.setUp()
-    mockGIDSignIn.clientID = mockGoogleCredentials.CLIENT_ID
   }
 
   func testAuthenticateWithService() {
     userManager.authenticate()
-    XCTAssertEqual(mockGIDSignIn.clientID, mockGoogleCredentials.CLIENT_ID)
     XCTAssertTrue(userManager === mockGIDSignIn.delegate)
     XCTAssertNotNil(mockGIDSignIn.scopes as? [String])
     XCTAssertEqual(

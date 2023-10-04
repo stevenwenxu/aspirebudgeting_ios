@@ -10,7 +10,7 @@ import GoogleSignIn
 import GTMSessionFetcher
 
 protocol IGIDSignIn: AnyObject {
-  func restorePreviousSignIn(callback: GIDSignInCallback?)
+  func restorePreviousSignIn(completion: ((GIDGoogleUser?, Error?) -> Void)?)
   func signOut()
 }
 
@@ -40,7 +40,6 @@ protocol UserManager {
 
 final class GoogleUserManager: NSObject, UserManager {
   private let gidSignInInstance: IGIDSignIn
-  private let credentials: GoogleSDKCredentials
 
   private let userSubject = PassthroughSubject<User?, Never>()
   var userPublisher: AnyPublisher<User?, Never> {
@@ -52,11 +51,7 @@ final class GoogleUserManager: NSObject, UserManager {
     (UIApplication.shared.connectedScenes.first!.delegate as! SceneDelegate).window!.rootViewController
   }
 
-  init(
-    credentials: GoogleSDKCredentials,
-    gidSignInInstance: IGIDSignIn = GIDSignIn.sharedInstance
-  ) {
-    self.credentials = credentials
+  init(gidSignInInstance: IGIDSignIn = GIDSignIn.sharedInstance) {
     self.gidSignInInstance = gidSignInInstance
   }
 
@@ -71,12 +66,11 @@ final class GoogleUserManager: NSObject, UserManager {
   
   func manualLogin() {
     GIDSignIn.sharedInstance.signIn(
-      with: GIDConfiguration(clientID: credentials.CLIENT_ID),
-      presenting: presentingViewController,
+      withPresenting: presentingViewController,
       hint: nil,
       additionalScopes: [kGTLRAuthScopeDrive, kGTLRAuthScopeSheetsDrive, kGTLRAuthScopeSheetsSpreadsheets]
-    ) { [weak self] user, error in
-      self?.didSignIn(user: user, error: error)
+    ) { [weak self] result, error in
+      self?.didSignIn(user: result?.user, error: error)
     }
   }
   
@@ -99,7 +93,7 @@ final class GoogleUserManager: NSObject, UserManager {
 
       userSubject.send(User(
         name: gUser.profile?.name ?? "Unknown user",
-        authorizer: gUser.authentication.fetcherAuthorizer()
+        authorizer: gUser.fetcherAuthorizer
       ))
     }
   }

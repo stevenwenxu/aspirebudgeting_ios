@@ -9,25 +9,8 @@ import GoogleSignIn
 final class ObjectFactory {
   private let credentialsFileName = "credentials"
 
-  lazy var googleSDKCredentials: GoogleSDKCredentials! = {
-    var sdkCredentials: GoogleSDKCredentials?
-
-    do {
-      sdkCredentials = try GoogleSDKCredentials.getCredentials(
-        from: credentialsFileName,
-        type: "plist",
-        bundle: Bundle.main,
-        decoder: PropertyListDecoder()
-      )
-    } catch {
-      fatalError("Unable to instantiate GoogleSDKCredentials.")
-    }
-
-    return sdkCredentials!
-  }()
-
   lazy var userManager: GoogleUserManager = {
-    GoogleUserManager(credentials: googleSDKCredentials)
+    GoogleUserManager()
   }()
 
   lazy var driveManager: GoogleDriveManager = {

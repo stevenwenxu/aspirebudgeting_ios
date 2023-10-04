@@ -13,18 +13,12 @@ final class MockProfile: GIDProfileData {
   }
 }
 
-final class MockAuthentication: GIDAuthentication {
-  override func fetcherAuthorizer() -> GTMFetcherAuthorizationProtocol {
-    MockAuthorizer()
-  }
-}
-
 final class MockUser: GIDGoogleUser {
   override var profile: GIDProfileData! {
     MockProfile()
   }
-
-  override var authentication: GIDAuthentication {
-    MockAuthentication()
+  
+  override var fetcherAuthorizer: GTMFetcherAuthorizationProtocol {
+    MockAuthorizer()
   }
 }
